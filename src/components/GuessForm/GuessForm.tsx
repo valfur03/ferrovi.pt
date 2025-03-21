@@ -1,12 +1,16 @@
 "use client";
 
-import { ChangeEventHandler, FormEventHandler, useCallback, useState } from "react";
+import { ChangeEventHandler, FormEventHandler, useCallback, useEffect, useState } from "react";
 import { useGame } from "@/contexts/game/use-game";
 
 export const GuessForm = () => {
     const inputBaseValue = "";
     const [inputValue, setInputValue] = useState(inputBaseValue);
-    const { state, makeGuess } = useGame();
+    const { state, init, makeGuess } = useGame();
+
+    useEffect(() => {
+        init();
+    }, [init]);
 
     const handleInputChange: ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
         setInputValue(e.target.value);

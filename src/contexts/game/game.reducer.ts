@@ -8,6 +8,10 @@ export const gameReducer = (state: Game | null, action: GameAction): Game | null
             return { latestGuess: null };
         }
         case "MAKE_GUESS": {
+            if (state === null) {
+                return null;
+            }
+
             return { ...state, latestGuess: action.payload };
         }
         default:
