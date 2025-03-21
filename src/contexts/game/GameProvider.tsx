@@ -3,7 +3,7 @@
 import { PropsWithChildren, useCallback, useMemo, useReducer } from "react";
 import { GameContext } from "@/contexts/game/game.context";
 import { gameReducer } from "@/contexts/game/game.reducer";
-import { metroStations } from "@/data/metro-stations";
+import { metroStationExists } from "@/utils/metro";
 
 export type GameProviderProps = PropsWithChildren;
 
@@ -15,7 +15,7 @@ export const GameProvider = ({ children }: GameProviderProps) => {
     }, []);
 
     const makeGuess = useCallback((guess: string) => {
-        if (!metroStations.find(({ name }) => name === guess)) {
+        if (!metroStationExists(guess)) {
             return false;
         }
 
