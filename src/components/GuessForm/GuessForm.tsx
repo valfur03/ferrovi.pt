@@ -20,8 +20,9 @@ export const GuessForm = () => {
         (e) => {
             e.preventDefault();
 
-            makeGuess(inputValue);
-            resetInput();
+            if (makeGuess(inputValue)) {
+                resetInput();
+            }
         },
         [inputValue, makeGuess, resetInput],
     );
