@@ -6,7 +6,7 @@ import { useGame } from "@/contexts/game/use-game";
 export const GuessForm = () => {
     const inputBaseValue = "";
     const [inputValue, setInputValue] = useState(inputBaseValue);
-    const { state, init, makeGuess } = useGame();
+    const { state, init, makeGuess, latestGuess } = useGame();
 
     useEffect(() => {
         init();
@@ -33,7 +33,7 @@ export const GuessForm = () => {
 
     return (
         <div>
-            {state?.latestGuess && <p>Your latest guess was: {state.latestGuess}</p>}
+            {latestGuess && <p>Your latest guess was: {latestGuess.name}</p>}
             <form onSubmit={handleFormSubmit} className="flex flex-col gap-4 w-64">
                 <input
                     value={inputValue}

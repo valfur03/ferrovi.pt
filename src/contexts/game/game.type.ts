@@ -1,3 +1,5 @@
+import { MetroStation } from "@/types/metro-station";
+
 export type Game = {
-    latestGuess: string | null;
+    guesses: Array<MetroStation>;
 };
