@@ -1,4 +1,5 @@
 import { MetroStation } from "@/types/metro-station";
+import { createMetroGraph, getShortestPathFromAToB } from "@/lib/metro-graph";
 
 const createMetroStations = <T extends Record<string, Omit<MetroStation, "id">>>(
     stations: T,
@@ -332,3 +333,22 @@ export const metroStations = createMetroStations({
     saintMichel: { name: "Saint-Michel", line: ["4"] },
 });
 export const metroStationsList = Object.values(metroStations);
+export const metroGraph = createMetroGraph([
+    [metroStations.laDefense, metroStations.esplanadeDeLaDefense],
+    [metroStations.esplanadeDeLaDefense, metroStations.laDefense],
+    [metroStations.esplanadeDeLaDefense, metroStations.pontDeNeuilly],
+    [metroStations.pontDeNeuilly, metroStations.esplanadeDeLaDefense],
+    [metroStations.pontDeNeuilly, metroStations.lesSablons],
+    [metroStations.lesSablons, metroStations.pontDeNeuilly],
+    [metroStations.lesSablons, metroStations.porteMaillot],
+    [metroStations.porteMaillot, metroStations.lesSablons],
+    [metroStations.porteMaillot, metroStations.argentine],
+    [metroStations.argentine, metroStations.porteMaillot],
+    [metroStations.argentine, metroStations.charlesDeGaulleEtoile],
+    [metroStations.charlesDeGaulleEtoile, metroStations.argentine],
+    [metroStations.charlesDeGaulleEtoile, metroStations.georgeV],
+    [metroStations.georgeV, metroStations.charlesDeGaulleEtoile],
+    [metroStations.georgeV, metroStations.franklinDRoosevelt],
+    [metroStations.franklinDRoosevelt, metroStations.georgeV],
+]);
+console.log(getShortestPathFromAToB(metroGraph, metroStations.esplanadeDeLaDefense.id, metroStations.argentine.id));
