@@ -173,7 +173,7 @@ export const metroStations = createMetroStations({
     ecoleVeterinaireDeMaisonsAlfort: { name: "École Vétérinaire de Maisons-Alfort", line: ["8"] },
     egliseDAuteuil: { name: "Église d'Auteuil", line: ["10"] },
     georgeV: { name: "George V", line: ["1"] },
-    "franklinD.Roosevelt": { name: "Franklin D. Roosevelt", line: ["9", "1"] },
+    franklinDRoosevelt: { name: "Franklin D. Roosevelt", line: ["9", "1"] },
     europe: { name: "Europe", line: ["3"] },
     jacquesBonsergent: { name: "Jacques Bonsergent", line: ["5"] },
     maubertMutualite: { name: "Maubert-Mutualité", line: ["10"] },
