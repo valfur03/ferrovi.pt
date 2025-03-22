@@ -1,25 +1,30 @@
 import { MetroStation } from "@/types/metro-station";
+import { MetroLine } from "@/types/metro-line";
 
-export const createMetroGraph = (edges: Array<[MetroStation, MetroStation]>): Map<string, Set<MetroStation>> => {
-    const map = new Map<string, Set<MetroStation>>();
+export const createMetroGraph = (
+    lines: Record<MetroLine, Array<[MetroStation, MetroStation]>>,
+): Map<string, Set<[string, MetroStation]>> => {
+    const map = new Map<string, Set<[string, MetroStation]>>();
 
-    edges.forEach(([a, b]) => {
-        let nodeA = map.get(a.id);
+    Object.entries(lines).forEach(([line, edges]) => {
+        edges.forEach(([a, b]) => {
+            let nodeA = map.get(a.id);
 
-        if (nodeA === undefined) {
-            const set = new Set<MetroStation>();
-            map.set(a.id, set);
-            nodeA = set;
-        }
+            if (nodeA === undefined) {
+                const set = new Set<[string, MetroStation]>();
+                map.set(a.id, set);
+                nodeA = set;
+            }
 
-        nodeA.add(b);
+            nodeA.add([line, b]);
+        });
     });
 
     return map;
 };
 
-export const getShortestPathFromAToB = (graph: Map<string, Set<MetroStation>>, a: string, b: string) => {
-    const costs = new Map<string, { cost: number; path: Array<string>; visited: boolean }>();
+export const getShortestPathFromAToB = (graph: Map<string, Set<[string, MetroStation]>>, a: string, b: string) => {
+    const costs = new Map<string, { cost: number; path: Array<[string, string]>; visited: boolean }>();
 
     for (const [nodeId] of graph.entries()) {
         costs.set(nodeId, { cost: nodeId === a ? 0 : Infinity, path: [], visited: false });
@@ -31,6 +36,7 @@ export const getShortestPathFromAToB = (graph: Map<string, Set<MetroStation>>, a
     }
 
     let nearestUnvisitedNode = a;
+    let currentLine: string | null = null;
     while (nearestUnvisitedNode !== b) {
         const edgesFromNode = graph.get(nearestUnvisitedNode);
 
@@ -44,16 +50,17 @@ export const getShortestPathFromAToB = (graph: Map<string, Set<MetroStation>>, a
         }
 
         const currentCost = currentNode.cost + 1;
-        for (const [siblingObject] of edgesFromNode.entries()) {
+        for (const [[line, siblingObject]] of edgesFromNode.entries()) {
+            const costToSibling = currentCost + (currentLine !== null && line !== currentLine ? 1 : 0);
             const sibling = costs.get(siblingObject.id);
 
             if (sibling === undefined) {
                 throw new Error("node is not supposed to be omitted");
             }
 
-            if (sibling.cost > currentCost) {
-                sibling.cost = currentCost;
-                sibling.path = [...currentNode.path, nearestUnvisitedNode];
+            if (sibling.cost > costToSibling) {
+                sibling.cost = costToSibling;
+                sibling.path = [...currentNode.path, [line, nearestUnvisitedNode]];
             }
         }
 
@@ -64,6 +71,7 @@ export const getShortestPathFromAToB = (graph: Map<string, Set<MetroStation>>, a
             if (!node.visited && node.cost < lowestCost) {
                 nearestUnvisitedNode = nodeId;
                 lowestCost = node.cost;
+                currentLine = node.path[node.path.length - 1][0];
             }
         }
     }
