@@ -6,7 +6,7 @@ export default function Home() {
     const from = Math.floor(Math.random() * metroStationsList.length);
     const to = (from + Math.floor(Math.random() * (metroStationsList.length - 1) + 1)) % metroStationsList.length;
 
-    const solution = (allMetroSolutions as Record<string, Record<string, Array<[string | null, string]>>>)[
+    const solution = (allMetroSolutions as unknown as Record<string, Record<string, Array<[string | null, string]>>>)[
         metroStationsList[from].id
     ][metroStationsList[to].id];
     const path = solution.map(([, metroStation]) => {
