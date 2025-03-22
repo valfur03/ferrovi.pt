@@ -1093,6 +1093,8 @@ export const metroGraph = createMetroGraph({
         [metroStations.chatillonMontrouge, metroStations.malakoffRueEtienneDolet],
     ],
     14: [
+        [metroStations.saintDenisPleyel, metroStations.mairieDeSaintOuen],
+        [metroStations.mairieDeSaintOuen, metroStations.saintDenisPleyel],
         [metroStations.mairieDeSaintOuen, metroStations.saintOuen],
         [metroStations.saintOuen, metroStations.mairieDeSaintOuen],
         [metroStations.saintOuen, metroStations.porteDeClichy],
