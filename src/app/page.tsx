@@ -19,3 +19,6 @@ export default function Home() {
         </>
     );
 }
+
+// As long as the path is generated here
+export const dynamic = "force-dynamic";
