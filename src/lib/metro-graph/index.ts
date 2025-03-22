@@ -76,5 +76,5 @@ export const getShortestPathFromAToB = (graph: Map<string, Set<[string, MetroSta
         }
     }
 
-    return [...targetNode.path, nearestUnvisitedNode];
+    return [...targetNode.path, [targetNode.path[targetNode.path.length - 1][0], nearestUnvisitedNode]];
 };
