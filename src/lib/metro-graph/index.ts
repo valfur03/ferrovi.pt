@@ -24,6 +24,10 @@ export const createMetroGraph = (
 };
 
 export const getShortestPathFromAToB = (graph: Map<string, Set<[string, MetroStation]>>, a: string, b: string) => {
+    if (a === b) {
+        return [null, a];
+    }
+
     const costs = new Map<string, { cost: number; path: Array<[string, string]>; visited: boolean }>();
 
     for (const [nodeId] of graph.entries()) {
