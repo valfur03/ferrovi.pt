@@ -1,7 +1,9 @@
 "use client";
 
-import { ChangeEventHandler, FormEventHandler, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useGame } from "@/contexts/game/use-game";
+import { Command, CommandInput } from "cmdk";
+import { metroStationsList } from "@/data/metro-stations";
 
 export const GuessForm = () => {
     const inputBaseValue = "";
@@ -12,39 +14,50 @@ export const GuessForm = () => {
         init();
     }, [init]);
 
-    const handleInputChange: ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
-        setInputValue(e.target.value);
+    const handleInputChange = useCallback((value: string) => {
+        setInputValue(value);
     }, []);
 
     const resetInput = useCallback(() => {
         setInputValue(inputBaseValue);
     }, []);
 
-    const handleFormSubmit: FormEventHandler<HTMLFormElement> = useCallback(
-        (e) => {
-            e.preventDefault();
-
-            if (makeGuess(inputValue)) {
+    const handleStationSelect = useCallback(
+        (value: string) => {
+            if (makeGuess(value)) {
                 resetInput();
             }
         },
-        [inputValue, makeGuess, resetInput],
+        [makeGuess, resetInput],
     );
 
     return (
         <div>
             {latestGuess && <p>Your latest guess was: {latestGuess.name}</p>}
-            <form onSubmit={handleFormSubmit} className="flex flex-col gap-4 w-64">
-                <input
-                    value={inputValue}
-                    onChange={handleInputChange}
-                    placeholder="Porte des Lilas"
-                    className="border"
-                />
-                <button type="submit" className="bg-blue-200">
-                    Guess
-                </button>
-            </form>
+            <div className="relative group">
+                <Command>
+                    <CommandInput
+                        value={inputValue}
+                        onValueChange={handleInputChange}
+                        placeholder="Porte des Lilas"
+                        className="border peer"
+                    />
+                    <div className="absolute top-full bg-white p-4 hidden group-focus-within:block peer-placeholder-shown:hidden">
+                        <Command.List>
+                            {metroStationsList.map(({ id, name }) => (
+                                <Command.Item
+                                    key={id}
+                                    keywords={[name.normalize("NFD").replace(/[\u0300-\u036f]/g, "")]}
+                                    onSelect={handleStationSelect}
+                                    className="data-[selected=true]:outline"
+                                >
+                                    {name}
+                                </Command.Item>
+                            ))}
+                        </Command.List>
+                    </div>
+                </Command>
+            </div>
             {discoveredPath !== null && (
                 <ol>
                     {discoveredPath.map((station, index) => (
