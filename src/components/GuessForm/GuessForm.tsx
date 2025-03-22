@@ -8,7 +8,7 @@ import { metroStationsList } from "@/data/metro-stations";
 export const GuessForm = () => {
     const inputBaseValue = "";
     const [inputValue, setInputValue] = useState(inputBaseValue);
-    const { init, makeGuess, latestGuess, discoveredPath } = useGame();
+    const { init, makeGuess, latestGuess, discoveredPath, endpoints } = useGame();
 
     useEffect(() => {
         init();
@@ -58,11 +58,13 @@ export const GuessForm = () => {
                     </div>
                 </Command>
             </div>
-            {discoveredPath !== null && (
+            {discoveredPath !== null && endpoints !== null && (
                 <ol>
+                    <li>{endpoints[0].name}</li>
                     {discoveredPath.map((station, index) => (
                         <li key={station?.id ?? index}>{station !== null ? station.name : "??"}</li>
                     ))}
+                    <li>{endpoints[1].name}</li>
                 </ol>
             )}
         </div>
