@@ -1,5 +1,4 @@
 import { Game } from "@/contexts/game/game.type";
-import { metroStations } from "@/data/metro-stations";
 import { MetroStation } from "@/types/metro-station";
 
 export type GameAction =
