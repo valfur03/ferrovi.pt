@@ -4,14 +4,15 @@ import { PropsWithChildren, useCallback, useMemo, useReducer } from "react";
 import { GameContext } from "@/contexts/game/game.context";
 import { gameReducer } from "@/contexts/game/game.reducer";
 import { findMetroStationByName } from "@/utils/metro";
+import { MetroStation } from "@/types/metro-station";
 
 export type GameProviderProps = PropsWithChildren;
 
 export const GameProvider = ({ children }: GameProviderProps) => {
     const [state, dispatch] = useReducer(gameReducer, null);
 
-    const init = useCallback(() => {
-        return dispatch({ type: "INIT" });
+    const init = useCallback((options: { path: Array<MetroStation> }) => {
+        return dispatch({ type: "INIT", payload: options });
     }, []);
 
     const makeGuess = useCallback((guess: string) => {

@@ -5,7 +5,7 @@ import { Game } from "@/contexts/game/game.type";
 import { MetroStation } from "@/types/metro-station";
 
 export type GameContextType = {
-    init: () => void;
+    init: (options: { path: Array<MetroStation> }) => void;
     makeGuess: (guess: string) => boolean;
     latestGuess: MetroStation | null;
     endpoints: Game["endpoints"] | null;

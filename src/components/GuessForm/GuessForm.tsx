@@ -4,15 +4,20 @@ import { useCallback, useEffect, useState } from "react";
 import { useGame } from "@/contexts/game/use-game";
 import { Command, CommandInput } from "cmdk";
 import { metroStationsList } from "@/data/metro-stations";
+import { MetroStation } from "@/types/metro-station";
 
-export const GuessForm = () => {
+export type GuessFormProps = {
+    path: Array<MetroStation>;
+};
+
+export const GuessForm = ({ path }: GuessFormProps) => {
     const inputBaseValue = "";
     const [inputValue, setInputValue] = useState(inputBaseValue);
     const { init, makeGuess, latestGuess, discoveredPath, endpoints } = useGame();
 
     useEffect(() => {
-        init();
-    }, [init]);
+        init({ path });
+    }, [init, path]);
 
     const handleInputChange = useCallback((value: string) => {
         setInputValue(value);
