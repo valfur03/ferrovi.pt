@@ -10,8 +10,8 @@ export const gameReducer = (state: Game | null, action: GameAction): Game | null
     switch (action.type) {
         case "INIT": {
             return {
-                endpoints: [metroStations.chatelet, metroStations.mairieDesLilas],
-                solution: action.payload.path,
+                endpoints: [action.payload.path[0], action.payload.path[action.payload.path.length - 1]],
+                solution: action.payload.path.slice(1, -1),
                 guesses: [],
             };
         }
