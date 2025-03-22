@@ -1,5 +1,5 @@
 import { MetroStation } from "@/types/metro-station";
-import { createMetroGraph } from "@/lib/metro-graph";
+import { createMetroGraph, getShortestPathFromAToB } from "@/lib/metro-graph";
 
 const createMetroStations = <T extends Record<string, Omit<MetroStation, "id">>>(
     stations: T,
@@ -1134,4 +1134,12 @@ export const metroGraph = createMetroGraph({
         [metroStations.thiaisOrly, metroStations.aeroportDOrly],
         [metroStations.aeroportDOrly, metroStations.thiaisOrly],
     ],
+});
+export const allMetroSolutions = metroStationsList.map((a) => {
+    console.log("generating all solutions from station '%s'", a.id);
+    return metroStationsList.map((b) => ({
+        from: a.id,
+        to: b.id,
+        path: getShortestPathFromAToB(metroGraph, a.id, b.id),
+    }));
 });
