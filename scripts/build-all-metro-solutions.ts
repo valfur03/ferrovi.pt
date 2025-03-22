@@ -2,7 +2,7 @@
 
 import { writeFileSync } from "node:fs";
 import path from "node:path";
-import { allMetroSolutions } from "@/data/metro-stations";
+import { allMetroSolutions } from "@/data/solutions";
 
 const OUTPUT_FILE_PATH = path.join("..", "public", "solutions.json");
 
