@@ -1,5 +1,5 @@
 import { MetroStation } from "@/types/metro-station";
-import { createMetroGraph, getShortestPathFromAToB } from "@/lib/metro-graph";
+import { createMetroGraph } from "@/lib/metro-graph";
 
 const createMetroStations = <T extends Record<string, Omit<MetroStation, "id">>>(
     stations: T,
