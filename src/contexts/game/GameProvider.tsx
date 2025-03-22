@@ -43,7 +43,7 @@ export const GameProvider = ({ children }: GameProviderProps) => {
     }, [state]);
 
     const value = useMemo(
-        () => ({ state, init, makeGuess, latestGuess, discoveredPath, endpoints: state?.endpoints ?? null }),
+        () => ({ init, makeGuess, latestGuess, discoveredPath, endpoints: state?.endpoints ?? null }),
         [state, init, makeGuess, latestGuess, discoveredPath],
     );
 
