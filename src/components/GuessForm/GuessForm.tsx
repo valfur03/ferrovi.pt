@@ -6,7 +6,7 @@ import { useGame } from "@/contexts/game/use-game";
 export const GuessForm = () => {
     const inputBaseValue = "";
     const [inputValue, setInputValue] = useState(inputBaseValue);
-    const { state, init, makeGuess, latestGuess } = useGame();
+    const { init, makeGuess, latestGuess, discoveredPath } = useGame();
 
     useEffect(() => {
         init();
@@ -45,6 +45,13 @@ export const GuessForm = () => {
                     Guess
                 </button>
             </form>
+            {discoveredPath !== null && (
+                <ol>
+                    {discoveredPath.map((station, index) => (
+                        <li key={station?.id ?? index}>{station !== null ? station.name : "??"}</li>
+                    ))}
+                </ol>
+            )}
         </div>
     );
 };

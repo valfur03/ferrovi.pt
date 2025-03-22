@@ -1,4 +1,5 @@
 import { Game } from "@/contexts/game/game.type";
+import { metroStations } from "@/data/metro-stations";
 import { MetroStation } from "@/types/metro-station";
 
 export type GameAction = { type: "INIT" } | { type: "MAKE_GUESS"; payload: MetroStation };
@@ -6,7 +7,15 @@ export type GameAction = { type: "INIT" } | { type: "MAKE_GUESS"; payload: Metro
 export const gameReducer = (state: Game | null, action: GameAction): Game | null => {
     switch (action.type) {
         case "INIT": {
-            return { guesses: [] };
+            return {
+                solution: [
+                    metroStations.chatelet,
+                    metroStations.maubertMutualite,
+                    metroStations.porteDeClichy,
+                    metroStations.porteDesLilas,
+                ],
+                guesses: [],
+            };
         }
         case "MAKE_GUESS": {
             if (state === null) {

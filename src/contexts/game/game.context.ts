@@ -9,6 +9,7 @@ export type GameContextType = {
     init: () => void;
     makeGuess: (guess: string) => boolean;
     latestGuess: MetroStation | null;
+    discoveredPath: Array<MetroStation | null> | null;
 };
 
 export const GameContext = createContext<GameContextType | null>(null);

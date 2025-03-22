@@ -32,7 +32,20 @@ export const GameProvider = ({ children }: GameProviderProps) => {
         return state.guesses[state.guesses.length - 1];
     }, [state]);
 
-    const value = useMemo(() => ({ state, init, makeGuess, latestGuess }), [state, init, makeGuess, latestGuess]);
+    const discoveredPath = useMemo(() => {
+        if (state === null) {
+            return null;
+        }
+
+        return state.solution.map((station) =>
+            state.guesses.find(({ name }) => name === station.name) ? station : null,
+        );
+    }, [state]);
+
+    const value = useMemo(
+        () => ({ state, init, makeGuess, latestGuess, discoveredPath }),
+        [state, init, makeGuess, latestGuess, discoveredPath],
+    );
 
     return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
 };
