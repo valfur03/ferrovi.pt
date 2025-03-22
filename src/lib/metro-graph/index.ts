@@ -23,9 +23,13 @@ export const createMetroGraph = (
     return map;
 };
 
-export const getShortestPathFromAToB = (graph: Map<string, Set<[string, MetroStation]>>, a: string, b: string) => {
+export const getShortestPathFromAToB = (
+    graph: Map<string, Set<[string, MetroStation]>>,
+    a: string,
+    b: string,
+): Array<[string | null, string]> => {
     if (a === b) {
-        return [null, a];
+        return [[null, a]];
     }
 
     const costs = new Map<string, { cost: number; path: Array<[string, string]>; visited: boolean }>();
