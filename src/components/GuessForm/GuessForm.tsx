@@ -42,6 +42,7 @@ export const GuessForm = ({ path }: GuessFormProps) => {
             <div className="relative group">
                 <Command>
                     <CommandInput
+                        autoFocus={true}
                         name="metro-station"
                         value={inputValue}
                         onValueChange={handleInputChange}
