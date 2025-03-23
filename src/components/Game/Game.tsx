@@ -1,8 +1,9 @@
 import { metroStations, metroStationsList } from "@/data/metro-stations";
-import allMetroSolutions from "@/data/solutions.json";
 import { GuessForm } from "@/components/GuessForm/GuessForm";
 
 export const Game = async () => {
+    const allMetroSolutions = await import("@/data/solutions.json");
+
     const from = Math.floor(Math.random() * metroStationsList.length);
     const to = (from + Math.floor(Math.random() * (metroStationsList.length - 1) + 1)) % metroStationsList.length;
 
