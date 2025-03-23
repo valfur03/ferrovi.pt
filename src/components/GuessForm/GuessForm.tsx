@@ -43,20 +43,18 @@ export const GuessForm = ({ path }: GuessFormProps) => {
             {latestGuess && <p>Your latest guess was: {latestGuess.name}</p>}
             <div className="relative group">
                 <Command>
-                    <div>
-                        <label htmlFor={inputId} className="block">
-                            Nom de la station
-                        </label>
-                        <CommandInput
-                            id={inputId}
-                            autoFocus={true}
-                            name="metro-station"
-                            value={inputValue}
-                            onValueChange={handleInputChange}
-                            placeholder="Porte des Lilas"
-                            className="border peer"
-                        />
-                    </div>
+                    <label htmlFor={inputId} className="block">
+                        Nom de la station
+                    </label>
+                    <CommandInput
+                        id={inputId}
+                        autoFocus={true}
+                        name="metro-station"
+                        value={inputValue}
+                        onValueChange={handleInputChange}
+                        placeholder="Porte des Lilas"
+                        className="peer border"
+                    />
                     <div className="absolute top-full bg-white p-4 hidden group-focus-within:block peer-placeholder-shown:hidden">
                         <Command.List>
                             {metroStationsList.map(({ id, name }) => (
