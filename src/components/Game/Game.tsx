@@ -16,7 +16,7 @@ export const Game = async () => {
     });
 
     return (
-        <main className="flex flex-col md:flex-row gap-2">
+        <main className="flex flex-col sm:flex-row gap-2">
             <GameGuesses />
             <GuessForm path={path} />
         </main>
