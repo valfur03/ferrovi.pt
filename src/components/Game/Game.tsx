@@ -1,5 +1,6 @@
 import { metroStations, metroStationsList } from "@/data/metro-stations";
 import { GuessForm } from "@/components/GuessForm/GuessForm";
+import { GameGuesses } from "@/components/GameGuesses/GameGuesses";
 
 export const Game = async () => {
     const allMetroSolutions = await import("@/data/solutions.json");
@@ -14,5 +15,10 @@ export const Game = async () => {
         return metroStations[metroStation as keyof typeof metroStations];
     });
 
-    return <GuessForm path={path} />;
+    return (
+        <main className="max-w-sm">
+            <GameGuesses />
+            <GuessForm path={path} />
+        </main>
+    );
 };

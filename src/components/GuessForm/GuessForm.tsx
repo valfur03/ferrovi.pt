@@ -13,7 +13,7 @@ export type GuessFormProps = {
 export const GuessForm = ({ path }: GuessFormProps) => {
     const inputBaseValue = "";
     const [inputValue, setInputValue] = useState(inputBaseValue);
-    const { init, makeGuess, latestGuess, discoveredPath, endpoints } = useGame();
+    const { init, makeGuess, latestGuess } = useGame();
 
     useEffect(() => {
         init({ path });
@@ -64,15 +64,6 @@ export const GuessForm = ({ path }: GuessFormProps) => {
                     </div>
                 </Command>
             </div>
-            {discoveredPath !== null && endpoints !== null && (
-                <ol>
-                    <li>{endpoints[0].name}</li>
-                    {discoveredPath.map((station, index) => (
-                        <li key={station?.id ?? index}>{station !== null ? station.name : "??"}</li>
-                    ))}
-                    <li>{endpoints[1].name}</li>
-                </ol>
-            )}
         </div>
     );
 };
