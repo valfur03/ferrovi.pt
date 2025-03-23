@@ -5,12 +5,14 @@ import { useGame } from "@/contexts/game/use-game";
 import { Command, CommandInput } from "cmdk";
 import { metroStationsList } from "@/data/metro-stations";
 import { MetroStation } from "@/types/metro-station";
+import { useId } from "@radix-ui/react-id";
 
 export type GuessFormProps = {
     path: Array<MetroStation>;
 };
 
 export const GuessForm = ({ path }: GuessFormProps) => {
+    const inputId = useId();
     const inputBaseValue = "";
     const [inputValue, setInputValue] = useState(inputBaseValue);
     const { init, makeGuess, latestGuess } = useGame();
@@ -41,17 +43,20 @@ export const GuessForm = ({ path }: GuessFormProps) => {
             {latestGuess && <p>Your latest guess was: {latestGuess.name}</p>}
             <div className="relative group">
                 <Command>
-                    <CommandInput
-                        autoFocus={true}
-                        data-1p-ignore
-                        data-lpignore="true"
-                        data-protonpass-ignore="true"
-                        name="metro-station"
-                        value={inputValue}
-                        onValueChange={handleInputChange}
-                        placeholder="Porte des Lilas"
-                        className="border peer"
-                    />
+                    <div>
+                        <label htmlFor={inputId} className="block">
+                            Nom de la station
+                        </label>
+                        <CommandInput
+                            id={inputId}
+                            autoFocus={true}
+                            name="metro-station"
+                            value={inputValue}
+                            onValueChange={handleInputChange}
+                            placeholder="Porte des Lilas"
+                            className="border peer"
+                        />
+                    </div>
                     <div className="absolute top-full bg-white p-4 hidden group-focus-within:block peer-placeholder-shown:hidden">
                         <Command.List>
                             {metroStationsList.map(({ id, name }) => (
