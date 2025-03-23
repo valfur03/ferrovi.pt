@@ -43,6 +43,9 @@ export const GuessForm = ({ path }: GuessFormProps) => {
                 <Command>
                     <CommandInput
                         autoFocus={true}
+                        data-1p-ignore
+                        data-lpignore="true"
+                        data-protonpass-ignore="true"
                         name="metro-station"
                         value={inputValue}
                         onValueChange={handleInputChange}
