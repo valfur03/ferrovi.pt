@@ -42,6 +42,7 @@ export const GuessForm = ({ path }: GuessFormProps) => {
             <div className="relative group">
                 <Command>
                     <CommandInput
+                        name="metro-station"
                         value={inputValue}
                         onValueChange={handleInputChange}
                         placeholder="Porte des Lilas"
