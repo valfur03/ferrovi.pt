@@ -13,7 +13,7 @@ export const Game = async () => {
     });
 
     return (
-        <div className="flex flex-col sm:flex-row gap-2">
+        <div className="flex flex-col sm:flex-row w-full sm:w-fit px-2 sm:px-0 gap-2">
             <GameGuesses />
             <GuessForm path={path} />
         </div>

@@ -12,7 +12,7 @@ export const GameGuesses = () => {
     const [from, to] = endpoints;
 
     return (
-        <div className="min-w-sm">
+        <div className="sm:w-sm">
             <p>
                 <b>{from.name}</b>
             </p>
