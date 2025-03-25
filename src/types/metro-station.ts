@@ -4,4 +4,5 @@ export type MetroStation = {
     id: string;
     name: string;
     line: [MetroLine, ...MetroLine[]];
+    coordinates: [number, number];
 };

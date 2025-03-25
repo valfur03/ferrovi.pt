@@ -12,7 +12,15 @@ import { MetroLine } from "@/types/metro-line";
 const INPUT_FILE_PATH = path.join("..", "public", "metro.json");
 const OUTPUT_FILE_PATH = path.join("..", "public", "out-metro.json");
 
-export type InputStation = { mode: "METRO" | string; indice_lig: string; nom_gares: string };
+export type InputStation = {
+    geo_point_2d: {
+        lon: number;
+        lat: number;
+    };
+    mode: "METRO" | string;
+    indice_lig: string;
+    nom_gares: string;
+};
 export type OutputStation = MetroStation;
 
 function slugFromName(name: string) {
@@ -42,12 +50,19 @@ async function main() {
         return process.exit(1);
     }
 
-    const output = data.reduce<Record<string, OutputStation>>((acc, { mode, nom_gares, indice_lig }) => {
+    const output = data.reduce<Record<string, OutputStation>>((acc, { geo_point_2d, mode, nom_gares, indice_lig }) => {
         if (mode === "METRO") {
             const stationName = slugFromName(nom_gares);
             const station = acc[stationName] ?? { name: nom_gares, line: [] };
 
-            return { ...acc, [stationName]: { ...station, line: [...station.line, indice_lig as MetroLine] } };
+            return {
+                ...acc,
+                [stationName]: {
+                    ...station,
+                    line: [...station.line, indice_lig as MetroLine],
+                    coordinates: [geo_point_2d.lon, geo_point_2d.lat],
+                },
+            };
         }
         return acc;
     }, {});
