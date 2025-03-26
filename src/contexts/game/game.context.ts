@@ -10,6 +10,7 @@ export type GameContextType = {
     latestGuess: MetroStation | null;
     endpoints: Game["endpoints"] | null;
     discoveredPath: Array<MetroStation | null> | null;
+    discoveredStations: Array<MetroStation> | null;
 };
 
 export const GameContext = createContext<GameContextType | null>(null);

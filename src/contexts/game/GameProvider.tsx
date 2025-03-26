@@ -43,9 +43,24 @@ export const GameProvider = ({ children }: GameProviderProps) => {
         );
     }, [state]);
 
+    const discoveredStations = useMemo(() => {
+        if (discoveredPath === null) {
+            return null;
+        }
+
+        return discoveredPath.filter((metroStation) => metroStation !== null);
+    }, [discoveredPath]);
+
     const value = useMemo(
-        () => ({ init, makeGuess, latestGuess, discoveredPath, endpoints: state?.endpoints ?? null }),
-        [state, init, makeGuess, latestGuess, discoveredPath],
+        () => ({
+            init,
+            makeGuess,
+            latestGuess,
+            discoveredPath,
+            discoveredStations,
+            endpoints: state?.endpoints ?? null,
+        }),
+        [state, init, makeGuess, latestGuess, discoveredPath, discoveredStations],
     );
 
     return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

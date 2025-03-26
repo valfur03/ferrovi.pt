@@ -15,3 +15,9 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@layer components {
+    #game-mapboxgl-map {
+        @apply w-full h-[inherit] aspect-[4/5] md:aspect-square lg:aspect-[3/2];
+    }
+}

@@ -16,11 +16,6 @@ export const GameGuesses = () => {
             <p>
                 <b>{from.name}</b>
             </p>
-            <ol className="">
-                {discoveredPath.map((metroStation, index) => (
-                    <li key={index}>{metroStation !== null ? metroStation.name : "??"}</li>
-                ))}
-            </ol>
             <p>
                 <b>{to.name}</b>
             </p>
