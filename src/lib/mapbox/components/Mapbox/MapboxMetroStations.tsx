@@ -43,7 +43,7 @@ export const MapboxMetroStations = ({ accessToken }: MapboxMetroStationsProps) =
                             ) {
                                 return {
                                     type: "Feature",
-                                    properties: null,
+                                    properties: {},
                                     geometry: {
                                         type: "LineString",
                                         coordinates: [coordinates, metroStation.coordinates],
