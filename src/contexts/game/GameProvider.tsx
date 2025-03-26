@@ -5,7 +5,6 @@ import { GameContext } from "@/contexts/game/game.context";
 import { gameReducer } from "@/contexts/game/game.reducer";
 import { findMetroStationByName } from "@/utils/metro";
 import { MetroStation } from "@/types/metro-station";
-import { metroStations } from "@/data/metro-stations";
 
 export type GameProviderProps = PropsWithChildren;
 
