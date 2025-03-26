@@ -3,9 +3,10 @@
 import * as React from "react";
 import Map, { Layer, Source } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { FeatureCollection } from "geojson";
+import { Feature, FeatureCollection, LineString } from "geojson";
 import { useGame } from "@/contexts/game/use-game";
 import { buildGeoJsonPointFromCoordinates } from "@/lib/mapbox/utils/build-geo-json-point-from-coordinates";
+import { metroGraph } from "@/data/metro-stations";
 
 export type MapboxMetroStationsProps = {
     accessToken: string;
@@ -18,8 +19,44 @@ export const MapboxMetroStations = ({ accessToken }: MapboxMetroStationsProps) =
         return null;
     }
 
-    const [rightGeoJson, wrongGeoJson] = discoveredStations.reduce<[FeatureCollection, FeatureCollection]>(
-        ([rightGeoJson, wrongGeoJson], { rightGuess, coordinates }) => {
+    const [rightGeoJson, wrongGeoJson, pathGeoJson] = discoveredStations.reduce<
+        [FeatureCollection, FeatureCollection, FeatureCollection<LineString>]
+    >(
+        ([rightGeoJson, wrongGeoJson, pathGeoJson], { id, rightGuess, coordinates }) => {
+            const siblings = metroGraph.get(id);
+
+            if (siblings === undefined) {
+                throw new Error("node is not supposed to be omitted");
+            }
+
+            const newPath: FeatureCollection<LineString> = {
+                ...pathGeoJson,
+                features: [
+                    ...pathGeoJson.features,
+                    ...siblings
+                        .values()
+                        .map(([, metroStation]): Feature<LineString> | null => {
+                            if (
+                                !!discoveredStations.find(({ id }) => id === metroStation.id) ||
+                                metroStation.id === endpoints[0].id ||
+                                metroStation.id === endpoints[1].id
+                            ) {
+                                return {
+                                    type: "Feature",
+                                    properties: null,
+                                    geometry: {
+                                        type: "LineString",
+                                        coordinates: [coordinates, metroStation.coordinates],
+                                    },
+                                };
+                            }
+
+                            return null;
+                        })
+                        .filter((metroStation) => metroStation !== null),
+                ],
+            };
+
             if (rightGuess) {
                 return [
                     {
@@ -27,6 +64,7 @@ export const MapboxMetroStations = ({ accessToken }: MapboxMetroStationsProps) =
                         features: [...rightGeoJson.features, buildGeoJsonPointFromCoordinates(coordinates)],
                     },
                     wrongGeoJson,
+                    newPath,
                 ];
             } else {
                 return [
@@ -35,6 +73,7 @@ export const MapboxMetroStations = ({ accessToken }: MapboxMetroStationsProps) =
                         ...wrongGeoJson,
                         features: [...wrongGeoJson.features, buildGeoJsonPointFromCoordinates(coordinates)],
                     },
+                    newPath,
                 ];
             }
         },
@@ -45,6 +84,10 @@ export const MapboxMetroStations = ({ accessToken }: MapboxMetroStationsProps) =
                     buildGeoJsonPointFromCoordinates(endpoints[0].coordinates),
                     buildGeoJsonPointFromCoordinates(endpoints[1].coordinates),
                 ],
+            },
+            {
+                type: "FeatureCollection",
+                features: [],
             },
             {
                 type: "FeatureCollection",
@@ -72,6 +115,15 @@ export const MapboxMetroStations = ({ accessToken }: MapboxMetroStationsProps) =
             projection="globe"
             reuseMaps
         >
+            <Source type="geojson" data={pathGeoJson}>
+                <Layer
+                    type="line"
+                    paint={{
+                        "line-width": 4,
+                        "line-color": "#000000",
+                    }}
+                />
+            </Source>
             <Source type="geojson" data={rightGeoJson}>
                 <Layer
                     type="circle"
