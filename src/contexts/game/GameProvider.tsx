@@ -5,6 +5,7 @@ import { GameContext } from "@/contexts/game/game.context";
 import { gameReducer } from "@/contexts/game/game.reducer";
 import { findMetroStationByName } from "@/utils/metro";
 import { MetroStation } from "@/types/metro-station";
+import { metroStations } from "@/data/metro-stations";
 
 export type GameProviderProps = PropsWithChildren;
 
@@ -48,10 +49,12 @@ export const GameProvider = ({ children }: GameProviderProps) => {
             return null;
         }
 
-        return state?.guesses.map((guess) => ({
-            ...guess,
-            rightGuess: !!state.solution.find(({ id }) => id === guess.id),
-        }));
+        return state?.guesses
+            .map((guess) => ({
+                ...guess,
+                rightGuess: !!state.solution.find(({ id }) => id === guess.id),
+            }))
+            .concat(state.endpoints.map((metroStation) => ({ ...metroStation, rightGuess: true })));
     }, [state]);
 
     const value = useMemo(
