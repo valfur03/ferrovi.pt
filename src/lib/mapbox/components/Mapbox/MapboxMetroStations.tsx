@@ -33,8 +33,7 @@ export const MapboxMetroStations = ({ accessToken }: MapboxMetroStationsProps) =
                 ...pathGeoJson,
                 features: [
                     ...pathGeoJson.features,
-                    ...siblings
-                        .values()
+                    ...Array.from(siblings)
                         .map(([, metroStation]): Feature<LineString> | null => {
                             if (
                                 !!discoveredStations.find(({ id }) => id === metroStation.id) ||
