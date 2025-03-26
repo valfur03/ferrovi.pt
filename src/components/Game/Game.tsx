@@ -1,18 +1,12 @@
 import { metroGraph, metroStations, metroStationsList } from "@/data/metro-stations";
 import { GuessForm } from "@/components/GuessForm/GuessForm";
 import { GameGuesses } from "@/components/GameGuesses/GameGuesses";
-import { getShortestPathFromAToB } from "@/lib/metro-graph";
 import { MapboxMetroStations } from "@/lib/mapbox/components/Mapbox/MapboxMetroStations";
 import { MAPBOX_PUBLIC_ACCESS_TOKEN } from "@/constants/env";
+import { buildRandomMetroStationsPath } from "@/app/game/actions";
 
 export const Game = async () => {
-    const from = Math.floor(Math.random() * metroStationsList.length);
-    const to = (from + Math.floor(Math.random() * (metroStationsList.length - 1) + 1)) % metroStationsList.length;
-
-    const solution = getShortestPathFromAToB(metroGraph, metroStationsList[from].id, metroStationsList[to].id);
-    const path = solution.map(([, metroStation]) => {
-        return metroStations[metroStation as keyof typeof metroStations];
-    });
+    const path = await buildRandomMetroStationsPath();
 
     return (
         <>
