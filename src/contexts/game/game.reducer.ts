@@ -19,6 +19,10 @@ export const gameReducer = (state: Game | null, action: GameAction): Game | null
                 return null;
             }
 
+            if (!!state.guesses.find(({ id }) => id === action.payload.id)) {
+                return state;
+            }
+
             return { ...state, guesses: state.guesses.concat(action.payload) };
         }
         default:
