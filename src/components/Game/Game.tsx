@@ -4,6 +4,7 @@ import { MapboxMetroStations } from "@/lib/mapbox/components/Mapbox/MapboxMetroS
 import { MAPBOX_PUBLIC_ACCESS_TOKEN } from "@/constants/env";
 import { buildRandomMetroStationsPath } from "@/app/game/actions";
 import { NewGameButton } from "@/components/NewGameButton/NewGameButton";
+import { GameBoard } from "@/components/GameBoard/GameBoard";
 
 export const Game = async () => {
     const path = await buildRandomMetroStationsPath();
@@ -14,10 +15,7 @@ export const Game = async () => {
                 <MapboxMetroStations accessToken={MAPBOX_PUBLIC_ACCESS_TOKEN} />
             </div>
             <div className="w-full max-w-screen-md flex flex-col items-center">
-                <div className="flex flex-col sm:flex-row w-full sm:w-fit px-2 sm:px-0 gap-2">
-                    <GameGuesses />
-                    <GuessForm path={path} />
-                </div>
+                <GameBoard path={path} />
                 <NewGameButton />
             </div>
         </>

@@ -11,6 +11,7 @@ export type GameContextType = {
     endpoints: Game["endpoints"] | null;
     discoveredPath: Array<MetroStation | null> | null;
     discoveredStations: Array<MetroStation & { rightGuess: boolean }> | null;
+    hasWon: boolean;
 };
 
 export const GameContext = createContext<GameContextType | null>(null);

@@ -1,25 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useGame } from "@/contexts/game/use-game";
 import { Command, CommandInput } from "cmdk";
 import { metroStationsList } from "@/data/metro-stations";
-import { MetroStation } from "@/types/metro-station";
 import { useId } from "@radix-ui/react-id";
 
-export type GuessFormProps = {
-    path: Array<MetroStation>;
-};
-
-export const GuessForm = ({ path }: GuessFormProps) => {
+export const GuessForm = () => {
     const inputId = useId();
     const inputBaseValue = "";
     const [inputValue, setInputValue] = useState(inputBaseValue);
-    const { init, makeGuess } = useGame();
-
-    useEffect(() => {
-        init({ path });
-    }, [init, path]);
+    const { makeGuess } = useGame();
 
     const handleInputChange = useCallback((value: string) => {
         setInputValue(value);

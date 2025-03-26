@@ -56,6 +56,14 @@ export const GameProvider = ({ children }: GameProviderProps) => {
             .concat(state.endpoints.map((metroStation) => ({ ...metroStation, rightGuess: true })));
     }, [state]);
 
+    const hasWon = useMemo(() => {
+        if (discoveredPath === null) {
+            return false;
+        }
+
+        return discoveredPath.find((metroStations) => metroStations === null) === undefined;
+    }, [discoveredPath]);
+
     const value = useMemo(
         () => ({
             init,
@@ -63,9 +71,10 @@ export const GameProvider = ({ children }: GameProviderProps) => {
             latestGuess,
             discoveredPath,
             discoveredStations,
+            hasWon,
             endpoints: state?.endpoints ?? null,
         }),
-        [state, init, makeGuess, latestGuess, discoveredPath, discoveredStations],
+        [state, init, makeGuess, latestGuess, discoveredPath, discoveredStations, hasWon],
     );
 
     return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
