@@ -1,5 +1,3 @@
-import { GuessForm } from "@/components/GuessForm/GuessForm";
-import { GameGuesses } from "@/components/GameGuesses/GameGuesses";
 import { MapboxMetroStations } from "@/lib/mapbox/components/Mapbox/MapboxMetroStations";
 import { MAPBOX_PUBLIC_ACCESS_TOKEN } from "@/constants/env";
 import { buildRandomMetroStationsPath } from "@/app/game/actions";
