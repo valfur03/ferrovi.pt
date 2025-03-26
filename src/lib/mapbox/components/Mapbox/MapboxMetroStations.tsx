@@ -103,7 +103,7 @@ export const MapboxMetroStations = ({ accessToken }: MapboxMetroStationsProps) =
             initialViewState={{
                 longitude: 2.332,
                 latitude: 48.86,
-                zoom: 12,
+                zoom: 10.2,
             }}
             minZoom={10.5}
             maxZoom={16}
