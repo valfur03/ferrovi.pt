@@ -5,6 +5,7 @@ import Map, { Layer, Source } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { FeatureCollection } from "geojson";
 import { useGame } from "@/contexts/game/use-game";
+import { buildGeoJsonPointFromCoordinates } from "@/lib/mapbox/utils/build-geo-json-point-from-coordinates";
 
 export type MapboxMetroStationsProps = {
     accessToken: string;
@@ -17,19 +18,40 @@ export const MapboxMetroStations = ({ accessToken }: MapboxMetroStationsProps) =
         return null;
     }
 
-    const geojson: FeatureCollection = {
-        type: "FeatureCollection",
-        features: discoveredStations.concat(endpoints).map(({ coordinates }) => {
-            return {
-                type: "Feature",
-                properties: null,
-                geometry: {
-                    type: "Point",
-                    coordinates,
-                },
-            };
-        }),
-    };
+    const [rightGeoJson, wrongGeoJson] = discoveredStations.reduce<[FeatureCollection, FeatureCollection]>(
+        ([rightGeoJson, wrongGeoJson], { rightGuess, coordinates }) => {
+            if (rightGuess) {
+                return [
+                    {
+                        ...rightGeoJson,
+                        features: [...rightGeoJson.features, buildGeoJsonPointFromCoordinates(coordinates)],
+                    },
+                    wrongGeoJson,
+                ];
+            } else {
+                return [
+                    rightGeoJson,
+                    {
+                        ...wrongGeoJson,
+                        features: [...wrongGeoJson.features, buildGeoJsonPointFromCoordinates(coordinates)],
+                    },
+                ];
+            }
+        },
+        [
+            {
+                type: "FeatureCollection",
+                features: [
+                    buildGeoJsonPointFromCoordinates(endpoints[0].coordinates),
+                    buildGeoJsonPointFromCoordinates(endpoints[1].coordinates),
+                ],
+            },
+            {
+                type: "FeatureCollection",
+                features: [],
+            },
+        ],
+    );
 
     return (
         <Map
@@ -50,7 +72,7 @@ export const MapboxMetroStations = ({ accessToken }: MapboxMetroStationsProps) =
             projection="globe"
             reuseMaps
         >
-            <Source type="geojson" data={geojson}>
+            <Source type="geojson" data={rightGeoJson}>
                 <Layer
                     type="circle"
                     paint={{
@@ -63,6 +85,22 @@ export const MapboxMetroStations = ({ accessToken }: MapboxMetroStationsProps) =
                             ],
                         },
                         "circle-color": "#007cbf",
+                    }}
+                />
+            </Source>
+            <Source type="geojson" data={wrongGeoJson}>
+                <Layer
+                    type="circle"
+                    paint={{
+                        "circle-radius": {
+                            type: "exponential",
+                            base: 1.5,
+                            stops: [
+                                [9, 2],
+                                [22, 120],
+                            ],
+                        },
+                        "circle-color": "#ff0000",
                     }}
                 />
             </Source>

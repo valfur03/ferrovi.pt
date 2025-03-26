@@ -44,12 +44,15 @@ export const GameProvider = ({ children }: GameProviderProps) => {
     }, [state]);
 
     const discoveredStations = useMemo(() => {
-        if (discoveredPath === null) {
+        if (state === null) {
             return null;
         }
 
-        return discoveredPath.filter((metroStation) => metroStation !== null);
-    }, [discoveredPath]);
+        return state?.guesses.map((guess) => ({
+            ...guess,
+            rightGuess: !!state.solution.find(({ id }) => id === guess.id),
+        }));
+    }, [state]);
 
     const value = useMemo(
         () => ({
