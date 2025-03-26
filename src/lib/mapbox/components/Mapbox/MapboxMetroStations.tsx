@@ -3,9 +3,8 @@
 import * as React from "react";
 import Map, { Layer, Source } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { Feature, FeatureCollection, LineString } from "geojson";
+import { Feature, FeatureCollection, LineString, Point } from "geojson";
 import { useGame } from "@/contexts/game/use-game";
-import { buildGeoJsonPointFromCoordinates } from "@/lib/mapbox/utils/build-geo-json-point-from-coordinates";
 import { metroGraph } from "@/data/metro-stations";
 
 export type MapboxMetroStationsProps = {
@@ -19,80 +18,88 @@ export const MapboxMetroStations = ({ accessToken }: MapboxMetroStationsProps) =
         return null;
     }
 
-    const [rightGeoJson, wrongGeoJson, pathGeoJson] = discoveredStations.reduce<
-        [FeatureCollection, FeatureCollection, FeatureCollection<LineString>]
-    >(
-        ([rightGeoJson, wrongGeoJson, pathGeoJson], { id, rightGuess, coordinates }) => {
+    const { metroStationsGeoJson, rightPathsGeoJson, wrongPathsGeoJson } = discoveredStations.reduce<{
+        metroStationsGeoJson: FeatureCollection<Point>;
+        rightPathsGeoJson: FeatureCollection<LineString>;
+        wrongPathsGeoJson: FeatureCollection<LineString>;
+    }>(
+        ({ metroStationsGeoJson, rightPathsGeoJson, wrongPathsGeoJson }, { id, rightGuess, coordinates }) => {
             const siblings = metroGraph.get(id);
 
             if (siblings === undefined) {
                 throw new Error("node is not supposed to be omitted");
             }
 
-            const newPath: FeatureCollection<LineString> = {
-                ...pathGeoJson,
-                features: [
-                    ...pathGeoJson.features,
-                    ...Array.from(siblings)
-                        .map(([, metroStation]): Feature<LineString> | null => {
-                            if (
-                                !!discoveredStations.find(({ id }) => id === metroStation.id) ||
-                                metroStation.id === endpoints[0].id ||
-                                metroStation.id === endpoints[1].id
-                            ) {
-                                return {
+            const [newRightPaths, newWrongPaths] = Array.from(siblings).reduce<
+                [Array<Feature<LineString>>, Array<Feature<LineString>>]
+            >(
+                ([newRightPaths, newWrongPaths], [, siblingMetroStation]) => {
+                    const siblingMetroStationWithSolution = discoveredStations.find(
+                        ({ id }) => id === siblingMetroStation.id,
+                    );
+
+                    if (siblingMetroStationWithSolution === undefined) {
+                        return [newRightPaths, newWrongPaths];
+                    }
+
+                    if (rightGuess && siblingMetroStationWithSolution.rightGuess) {
+                        return [
+                            [
+                                ...newRightPaths,
+                                {
                                     type: "Feature",
                                     properties: {},
                                     geometry: {
                                         type: "LineString",
-                                        coordinates: [coordinates, metroStation.coordinates],
+                                        coordinates: [coordinates, siblingMetroStation.coordinates],
                                     },
-                                };
-                            }
+                                },
+                            ],
+                            newWrongPaths,
+                        ];
+                    } else {
+                        return [
+                            newRightPaths,
+                            [
+                                ...newWrongPaths,
+                                {
+                                    type: "Feature",
+                                    properties: {},
+                                    geometry: {
+                                        type: "LineString",
+                                        coordinates: [coordinates, siblingMetroStation.coordinates],
+                                    },
+                                },
+                            ],
+                        ];
+                    }
+                },
+                [[], []],
+            );
 
-                            return null;
-                        })
-                        .filter((metroStation) => metroStation !== null),
-                ],
+            return {
+                metroStationsGeoJson: {
+                    ...metroStationsGeoJson,
+                    features: [
+                        ...metroStationsGeoJson.features,
+                        { type: "Feature", properties: {}, geometry: { type: "Point", coordinates } },
+                    ],
+                },
+                rightPathsGeoJson: {
+                    ...rightPathsGeoJson,
+                    features: [...rightPathsGeoJson.features, ...newRightPaths],
+                },
+                wrongPathsGeoJson: {
+                    ...wrongPathsGeoJson,
+                    features: [...wrongPathsGeoJson.features, ...newWrongPaths],
+                },
             };
-
-            if (rightGuess) {
-                return [
-                    {
-                        ...rightGeoJson,
-                        features: [...rightGeoJson.features, buildGeoJsonPointFromCoordinates(coordinates)],
-                    },
-                    wrongGeoJson,
-                    newPath,
-                ];
-            } else {
-                return [
-                    rightGeoJson,
-                    {
-                        ...wrongGeoJson,
-                        features: [...wrongGeoJson.features, buildGeoJsonPointFromCoordinates(coordinates)],
-                    },
-                    newPath,
-                ];
-            }
         },
-        [
-            {
-                type: "FeatureCollection",
-                features: [
-                    buildGeoJsonPointFromCoordinates(endpoints[0].coordinates),
-                    buildGeoJsonPointFromCoordinates(endpoints[1].coordinates),
-                ],
-            },
-            {
-                type: "FeatureCollection",
-                features: [],
-            },
-            {
-                type: "FeatureCollection",
-                features: [],
-            },
-        ],
+        {
+            metroStationsGeoJson: { type: "FeatureCollection", features: [] },
+            rightPathsGeoJson: { type: "FeatureCollection", features: [] },
+            wrongPathsGeoJson: { type: "FeatureCollection", features: [] },
+        },
     );
 
     return (
@@ -114,16 +121,26 @@ export const MapboxMetroStations = ({ accessToken }: MapboxMetroStationsProps) =
             projection="globe"
             reuseMaps
         >
-            <Source type="geojson" data={pathGeoJson}>
+            <Source type="geojson" data={wrongPathsGeoJson}>
+                <Layer
+                    type="line"
+                    paint={{
+                        "line-dasharray": [1, 3, 1],
+                        "line-width": 2,
+                        "line-color": "#818181",
+                    }}
+                />
+            </Source>
+            <Source type="geojson" data={rightPathsGeoJson}>
                 <Layer
                     type="line"
                     paint={{
                         "line-width": 4,
-                        "line-color": "#000000",
+                        "line-color": "#283343",
                     }}
                 />
             </Source>
-            <Source type="geojson" data={rightGeoJson}>
+            <Source type="geojson" data={metroStationsGeoJson}>
                 <Layer
                     type="circle"
                     paint={{
@@ -131,27 +148,20 @@ export const MapboxMetroStations = ({ accessToken }: MapboxMetroStationsProps) =
                             type: "exponential",
                             base: 1.6,
                             stops: [
-                                [9, 3],
-                                [22, 190],
+                                [9, 2.5],
+                                [22, 250],
                             ],
                         },
-                        "circle-color": "#007cbf",
-                    }}
-                />
-            </Source>
-            <Source type="geojson" data={wrongGeoJson}>
-                <Layer
-                    type="circle"
-                    paint={{
-                        "circle-radius": {
+                        "circle-color": "#fffaf4",
+                        "circle-stroke-color": "#464646",
+                        "circle-stroke-width": {
                             type: "exponential",
-                            base: 1.5,
+                            base: 1.6,
                             stops: [
-                                [9, 2],
-                                [22, 120],
+                                [9, 1.5],
+                                [22, 100],
                             ],
                         },
-                        "circle-color": "#ff0000",
                     }}
                 />
             </Source>
