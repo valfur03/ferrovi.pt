@@ -16,14 +16,14 @@ export const Game = async () => {
 
     return (
         <>
+            <div className="w-full max-w-screen-md">
+                <MapboxMetroStations accessToken={MAPBOX_PUBLIC_ACCESS_TOKEN} />
+            </div>
             <div className="w-full max-w-md">
                 <div className="flex flex-col sm:flex-row w-full sm:w-fit px-2 sm:px-0 gap-2">
                     <GameGuesses />
                     <GuessForm path={path} />
                 </div>
-            </div>
-            <div className="w-full max-w-screen-xl">
-                <MapboxMetroStations accessToken={MAPBOX_PUBLIC_ACCESS_TOKEN} />
             </div>
         </>
     );
