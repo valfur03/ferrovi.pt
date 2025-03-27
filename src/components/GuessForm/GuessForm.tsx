@@ -90,7 +90,7 @@ export const GuessForm = () => {
                         className="outline-none bg-white border w-full p-2"
                     />
                 </div>
-                <div className="absolute z-10 w-full bottom-full bg-white p-4 hidden group-focus-within:block peer-[:has(>input:placeholder-shown)]:hidden">
+                <div className="absolute z-10 w-full bottom-full h-fit md:top-full bg-white p-4 hidden group-focus-within:block peer-[:has(>input:placeholder-shown)]:hidden">
                     {searchResults.map(({ id, name }) => (
                         <p
                             key={id}
