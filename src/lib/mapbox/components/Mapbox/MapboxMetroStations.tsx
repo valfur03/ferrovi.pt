@@ -6,6 +6,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { Feature, FeatureCollection, LineString, Point } from "geojson";
 import { useGame } from "@/contexts/game/use-game";
 import { metroGraph } from "@/data/metro-stations";
+import { buildGeoJsonPointFromCoordinates } from "@/lib/mapbox/utils/build-geo-json-point-from-coordinates";
 
 export type MapboxMetroStationsProps = {
     accessToken: string;
@@ -77,13 +78,15 @@ export const MapboxMetroStations = ({ accessToken }: MapboxMetroStationsProps) =
                 [[], []],
             );
 
+            const newMetroStation: Array<Feature<Point>> =
+                id !== endpoints[0].id && id !== endpoints[1].id
+                    ? [{ type: "Feature", properties: {}, geometry: { type: "Point", coordinates } }]
+                    : [];
+
             return {
                 metroStationsGeoJson: {
                     ...metroStationsGeoJson,
-                    features: [
-                        ...metroStationsGeoJson.features,
-                        { type: "Feature", properties: {}, geometry: { type: "Point", coordinates } },
-                    ],
+                    features: [...metroStationsGeoJson.features, ...newMetroStation],
                 },
                 rightPathsGeoJson: {
                     ...rightPathsGeoJson,
@@ -153,6 +156,56 @@ export const MapboxMetroStations = ({ accessToken }: MapboxMetroStationsProps) =
                             ],
                         },
                         "circle-color": "#fffaf4",
+                        "circle-stroke-color": "#464646",
+                        "circle-stroke-width": {
+                            type: "exponential",
+                            base: 1.6,
+                            stops: [
+                                [9, 1.5],
+                                [22, 100],
+                            ],
+                        },
+                    }}
+                />
+            </Source>
+            <Source type="geojson" data={buildGeoJsonPointFromCoordinates(endpoints[0].coordinates)}>
+                <Layer
+                    type="circle"
+                    paint={{
+                        "circle-radius": {
+                            type: "exponential",
+                            base: 1.6,
+                            stops: [
+                                [9, 2.5],
+                                [22, 250],
+                            ],
+                        },
+                        "circle-color": "#0dcb26",
+                        "circle-stroke-color": "#464646",
+                        "circle-stroke-width": {
+                            type: "exponential",
+                            base: 1.6,
+                            stops: [
+                                [9, 1.5],
+                                [22, 100],
+                            ],
+                        },
+                    }}
+                />
+            </Source>
+            <Source type="geojson" data={buildGeoJsonPointFromCoordinates(endpoints[1].coordinates)}>
+                <Layer
+                    type="circle"
+                    paint={{
+                        "circle-radius": {
+                            type: "exponential",
+                            base: 1.6,
+                            stops: [
+                                [9, 2.5],
+                                [22, 250],
+                            ],
+                        },
+                        "circle-color": "#f54242",
                         "circle-stroke-color": "#464646",
                         "circle-stroke-width": {
                             type: "exponential",
