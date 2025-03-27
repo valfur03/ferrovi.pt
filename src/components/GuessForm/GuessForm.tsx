@@ -99,6 +99,9 @@ export const GuessForm = () => {
                             onMouseEnter={() => {
                                 setSelectedSearchResultId(id);
                             }}
+                            onMouseDown={() => {
+                                handleStationSelect(name);
+                            }}
                             className="data-[selected=true]:outline"
                         >
                             {name}
