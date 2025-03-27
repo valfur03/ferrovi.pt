@@ -62,47 +62,49 @@ export const GuessForm = () => {
     }, []);
 
     return (
-        <div className="relative group">
-            <div className="peer">
-                <input
-                    id={inputId}
-                    autoFocus={true}
-                    name="metro-station"
-                    value={inputValue}
-                    onChange={handleInputChange}
-                    onKeyDown={(e) => {
-                        switch (e.key) {
-                            case "ArrowDown": {
-                                return setSelectedSearchResultIndex((index) =>
-                                    index < searchResults.length - 1 ? index + 1 : index,
-                                );
+        <div className="absolute bottom-0 w-full md:static">
+            <div className="relative group">
+                <div className="peer">
+                    <input
+                        id={inputId}
+                        autoFocus={true}
+                        name="metro-station"
+                        value={inputValue}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) => {
+                            switch (e.key) {
+                                case "ArrowDown": {
+                                    return setSelectedSearchResultIndex((index) =>
+                                        index < searchResults.length - 1 ? index + 1 : index,
+                                    );
+                                }
+                                case "ArrowUp": {
+                                    return setSelectedSearchResultIndex((index) => (index > 0 ? index - 1 : index));
+                                }
+                                case "Enter": {
+                                    return handleStationSelect(searchResults[selectedSearchResultIndex].name);
+                                }
                             }
-                            case "ArrowUp": {
-                                return setSelectedSearchResultIndex((index) => (index > 0 ? index - 1 : index));
-                            }
-                            case "Enter": {
-                                return handleStationSelect(searchResults[selectedSearchResultIndex].name);
-                            }
-                        }
-                    }}
-                    placeholder="Porte des Lilas"
-                    className="border"
-                />
-            </div>
-            <div className="absolute top-full bg-white p-4 hidden group-focus-within:block peer-[:has(>input:placeholder-shown)]:hidden">
-                {searchResults.map(({ id, name }) => (
-                    <p
-                        key={id}
-                        aria-selected={id === selectedSearchResultId}
-                        data-selected={id === selectedSearchResultId}
-                        onMouseEnter={() => {
-                            setSelectedSearchResultId(id);
                         }}
-                        className="data-[selected=true]:outline"
-                    >
-                        {name}
-                    </p>
-                ))}
+                        placeholder="Porte des Lilas"
+                        className="outline-none border w-full p-2"
+                    />
+                </div>
+                <div className="absolute z-10 w-full bottom-full bg-white p-4 hidden group-focus-within:block peer-[:has(>input:placeholder-shown)]:hidden">
+                    {searchResults.map(({ id, name }) => (
+                        <p
+                            key={id}
+                            aria-selected={id === selectedSearchResultId}
+                            data-selected={id === selectedSearchResultId}
+                            onMouseEnter={() => {
+                                setSelectedSearchResultId(id);
+                            }}
+                            className="data-[selected=true]:outline"
+                        >
+                            {name}
+                        </p>
+                    ))}
+                </div>
             </div>
         </div>
     );

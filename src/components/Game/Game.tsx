@@ -12,7 +12,7 @@ export const Game = async () => {
             <div className="w-full max-w-screen-md">
                 <MapboxMetroStations accessToken={MAPBOX_PUBLIC_ACCESS_TOKEN} />
             </div>
-            <div className="w-full max-w-screen-md flex flex-col items-center">
+            <div className="w-full md:max-w-screen-md flex flex-col items-center">
                 <GameBoard path={path} />
                 <NewGameButton />
             </div>
