@@ -41,23 +41,24 @@ export const GuessForm = () => {
             return;
         }
 
-        setSearchResults(
-            metroStationsList
-                .reduce<Array<[number, MetroStation]>>((acc, metroStation) => {
-                    const score = searchScore(metroStation.name, e.target.value, [
-                        metroStation.name.normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
-                    ]);
+        const newSearchResults = metroStationsList
+            .reduce<Array<[number, MetroStation]>>((acc, metroStation) => {
+                const score = searchScore(metroStation.name, e.target.value, [
+                    metroStation.name.normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+                ]);
 
-                    if (score === 0) {
-                        return acc;
-                    }
+                if (score === 0) {
+                    return acc;
+                }
 
-                    return [...acc, [score, metroStation]];
-                }, [])
-                .toSorted(([score1], [score2]) => score2 - score1)
-                .slice(0, 5)
-                .map(([, metroStation]) => metroStation),
-        );
+                return [...acc, [score, metroStation]];
+            }, [])
+            .toSorted(([score1], [score2]) => score2 - score1)
+            .slice(0, 5)
+            .map(([, metroStation]) => metroStation);
+        setSearchResults(newSearchResults);
+        setSelectedSearchResultId(newSearchResults[0]?.id);
+        setSelectedSearchResultIndex(0);
     }, []);
 
     return (
