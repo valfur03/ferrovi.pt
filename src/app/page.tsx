@@ -1,18 +1,16 @@
 import { Game } from "@/components/Game/Game";
-import { Suspense } from "react";
-import { LoadingGame } from "@/components/Game/LoadingGame";
 import { LogoLong } from "@/components/Logo/LogoLong";
 import Link from "next/link";
 
 export default function Home() {
     return (
         <main className="flex flex-col items-center">
-            <Link href="/">
-                <LogoLong className="w-32 my-4" />
-            </Link>
-            <Suspense fallback={<LoadingGame />}>
-                <Game />
-            </Suspense>
+            <div className="w-full bg-white flex p-4 flex items-center justify-center">
+                <Link href="/">
+                    <LogoLong className="w-32" />
+                </Link>
+            </div>
+            <Game />
         </main>
     );
 }

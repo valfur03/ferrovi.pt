@@ -107,7 +107,6 @@ export const MapboxMetroStations = ({ accessToken }: MapboxMetroStationsProps) =
 
     return (
         <Map
-            id="game-mapboxgl-map"
             mapboxAccessToken={accessToken}
             mapStyle="mapbox://styles/hintauh/cm8oi8gph004801sk72xbgo2a"
             initialViewState={{

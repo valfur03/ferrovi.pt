@@ -62,7 +62,7 @@ export const GuessForm = () => {
     }, []);
 
     return (
-        <div className="absolute bottom-0 w-full md:static">
+        <div className="absolute bottom-0 left-0 w-full md:static">
             <div className="relative group">
                 <div className="peer">
                     <input
@@ -87,7 +87,7 @@ export const GuessForm = () => {
                             }
                         }}
                         placeholder="Porte des Lilas"
-                        className="outline-none border w-full p-2"
+                        className="outline-none bg-white border w-full p-2"
                     />
                 </div>
                 <div className="absolute z-10 w-full bottom-full bg-white p-4 hidden group-focus-within:block peer-[:has(>input:placeholder-shown)]:hidden">
