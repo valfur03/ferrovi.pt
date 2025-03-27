@@ -37,6 +37,10 @@ export const GuessForm = () => {
     const handleInputChange: ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
         setInputValue(e.target.value);
 
+        if (e.target.value === "") {
+            return;
+        }
+
         setSearchResults(
             metroStationsList
                 .reduce<Array<[number, MetroStation]>>((acc, metroStation) => {
