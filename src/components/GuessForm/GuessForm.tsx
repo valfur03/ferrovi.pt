@@ -58,31 +58,33 @@ export const GuessForm = () => {
 
     return (
         <div className="relative group">
-            <input
-                id={inputId}
-                autoFocus={true}
-                name="metro-station"
-                value={inputValue}
-                onChange={handleInputChange}
-                onKeyDown={(e) => {
-                    switch (e.key) {
-                        case "ArrowDown": {
-                            return setSelectedSearchResultIndex((index) =>
-                                index < searchResults.length - 1 ? index + 1 : index,
-                            );
+            <div className="peer">
+                <input
+                    id={inputId}
+                    autoFocus={true}
+                    name="metro-station"
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    onKeyDown={(e) => {
+                        switch (e.key) {
+                            case "ArrowDown": {
+                                return setSelectedSearchResultIndex((index) =>
+                                    index < searchResults.length - 1 ? index + 1 : index,
+                                );
+                            }
+                            case "ArrowUp": {
+                                return setSelectedSearchResultIndex((index) => (index > 0 ? index - 1 : index));
+                            }
+                            case "Enter": {
+                                return handleStationSelect(searchResults[selectedSearchResultIndex].name);
+                            }
                         }
-                        case "ArrowUp": {
-                            return setSelectedSearchResultIndex((index) => (index > 0 ? index - 1 : index));
-                        }
-                        case "Enter": {
-                            return handleStationSelect(searchResults[selectedSearchResultIndex].name);
-                        }
-                    }
-                }}
-                placeholder="Porte des Lilas"
-                className="border"
-            />
-            <div className="absolute top-full w-full p-2">
+                    }}
+                    placeholder="Porte des Lilas"
+                    className="border"
+                />
+            </div>
+            <div className="absolute top-full bg-white p-4 hidden group-focus-within:block peer-[:has(>input:placeholder-shown)]:hidden">
                 {searchResults.map(({ id, name }) => (
                     <p
                         key={id}
