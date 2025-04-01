@@ -88,7 +88,7 @@ export const GameProvider = ({ children }: GameProviderProps) => {
         }
 
         return hasWon;
-    }, [discoveredPath, save, setSave]);
+    }, [discoveredPath, setSave]);
 
     const value = useMemo(() => {
         return {
