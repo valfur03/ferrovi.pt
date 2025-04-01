@@ -9,7 +9,7 @@ export default async function Home() {
     return (
         <div className="min-h-screen flex flex-col items-stretch">
             <Navbar />
-            <main className="w-full h-0 flex flex-col items-center grow">
+            <main className="w-full h-0 flex flex-col items-center grow md:gap-12">
                 <Game path={path} mapboxConfiguration={mapboxConfiguration} />
             </main>
         </div>

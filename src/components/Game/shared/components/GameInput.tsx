@@ -46,13 +46,15 @@ export const GameInput = () => {
     );
 
     return (
-        <SearchBar
-            name="metro-station"
-            placeholder="Porte des Lilas"
-            value={inputValue}
-            onChange={handleInputChange}
-            onSearch={handleSearch}
-            onValueChange={handleStationSelect}
-        />
+        <div className="w-full max-w-screen-sm">
+            <SearchBar
+                name="metro-station"
+                placeholder="Porte des Lilas"
+                value={inputValue}
+                onChange={handleInputChange}
+                onSearch={handleSearch}
+                onValueChange={handleStationSelect}
+            />
+        </div>
     );
 };

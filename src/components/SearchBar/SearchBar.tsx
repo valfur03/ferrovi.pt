@@ -91,7 +91,7 @@ export const SearchBar = ({ onChange, onSearch, onValueChange, ref, value: propV
                     className="outline-none w-full p-3"
                 />
             </div>
-            <div className="absolute rounded-t-xl shadow-t-xl overflow-hidden z-10 w-full bottom-full h-fit md:top-full bg-white hidden group-focus-within:block peer-[:has(>input:placeholder-shown)]:hidden">
+            <div className="absolute rounded-t-xl shadow-t-xl overflow-hidden z-10 w-full bottom-full h-fit bg-white hidden group-focus-within:block peer-[:has(>input:placeholder-shown)]:hidden">
                 {searchResults.t.map((value, index) => (
                     <p
                         key={value}
