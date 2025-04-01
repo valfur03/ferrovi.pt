@@ -15,7 +15,7 @@ export const GameProvider = ({ children }: GameProviderProps) => {
 
     const init = useCallback(
         (options: { path: Array<MetroStation> }) => {
-            return dispatch({ type: "INIT", payload: { ...options, guesses: save.guesses } });
+            return dispatch({ type: "INIT", payload: { ...options, guesses: save.game.guesses } });
         },
         [save],
     );
@@ -28,7 +28,7 @@ export const GameProvider = ({ children }: GameProviderProps) => {
             }
 
             if (!state.guesses.find(({ id }) => id === station.id)) {
-                setSave((save) => ({ ...save, guesses: save.guesses.concat(station) }));
+                setSave((save) => ({ ...save, game: { ...save.game, guesses: save.game.guesses.concat(station) } }));
                 dispatch({ type: "ADD_GUESS", payload: station });
             }
 
