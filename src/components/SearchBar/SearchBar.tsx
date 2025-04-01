@@ -88,7 +88,7 @@ export const SearchBar = ({ onChange, onSearch, onValueChange, ref, value: propV
                     value={value}
                     onChange={handleChange}
                     onKeyDown={handleKeyDown}
-                    className="outline-none w-full p-3"
+                    className="outline-none w-full p-3 disabled:bg-neutral-100  border-neutral-200 disabled:border"
                 />
             </div>
             <div className="absolute rounded-t-xl shadow-t-xl overflow-hidden z-10 w-full bottom-full h-fit bg-white hidden group-focus-within:block peer-[:has(>input:placeholder-shown)]:hidden">

@@ -8,7 +8,7 @@ import { searchScore } from "@/utils/search";
 export const GameInput = () => {
     const inputBaseValue = "";
     const [inputValue, setInputValue] = useState(inputBaseValue);
-    const { makeGuess } = useGame();
+    const { makeGuess, hasWon } = useGame();
 
     const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
         setInputValue(e.target.value);
@@ -50,6 +50,8 @@ export const GameInput = () => {
             <SearchBar
                 name="metro-station"
                 placeholder="Porte des Lilas"
+                disabled={hasWon}
+                aria-disabled={hasWon}
                 value={inputValue}
                 onChange={handleInputChange}
                 onSearch={handleSearch}
