@@ -97,7 +97,7 @@ export const SearchBar = ({ onChange, onSearch, onValueChange, ref, value: propV
                         key={value}
                         aria-selected={index === searchResults.selectedIndex}
                         data-selected={index === searchResults.selectedIndex}
-                        onMouseEnter={(e) => {
+                        onMouseEnter={() => {
                             setSearchResults((prev) => ({ ...prev, selectedIndex: index }));
                         }}
                         onMouseDown={(e) => {
