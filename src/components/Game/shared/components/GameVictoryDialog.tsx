@@ -6,12 +6,12 @@ import { Button } from "@/components/Button/Button";
 import { useEffect, useState } from "react";
 
 export const GameVictoryDialog = () => {
-    const { hasWon } = useGame();
-    const [isOpen, setIsOpen] = useState(hasWon);
+    const { hasWon, hasPlayed } = useGame();
+    const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
-        setIsOpen(hasWon);
-    }, [hasWon]);
+        setIsOpen(hasWon && hasPlayed);
+    }, [hasWon, hasPlayed]);
 
     return (
         <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>

@@ -15,11 +15,13 @@ export type GameProps = {
 };
 
 export const Game = ({ mapboxConfiguration, path }: GameProps) => {
-    const { init } = useGame();
+    const { init, initialized } = useGame();
 
     useEffect(() => {
-        init({ path });
-    }, [init, path]);
+        if (!initialized) {
+            init({ path });
+        }
+    }, [initialized, init, path]);
 
     return (
         <>
