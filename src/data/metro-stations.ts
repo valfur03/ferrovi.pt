@@ -2420,7 +2420,7 @@ export const metroGraph = createMetroGraph({
     ],
 });
 
-export const allDailyMetroProblems: Array<[keyof typeof metroStations, keyof typeof metroStations]> = [
+export const allDailyMetroProblems: Array<[string, string]> = [
     ["botzaris", "denfertRochereau"],
     ["botzaris", "charlesDeGaulleEtoile"],
     ["rueDesBoulets", "denfertRochereau"],

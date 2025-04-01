@@ -14,7 +14,10 @@ export const getPathChallengeOfTheDay = (date: Date = new Date()) => {
     const pathIndex = Math.floor(randomPathIndex / 2);
     const reversePath = randomPathIndex % 2 !== 0;
 
-    const [fromStr, toStr] = allDailyMetroProblems[pathIndex];
+    const [fromStr, toStr] = allDailyMetroProblems[pathIndex] as [
+        keyof typeof metroStations,
+        keyof typeof metroStations,
+    ];
     const from = metroStations[reversePath ? toStr : fromStr];
     const to = metroStations[reversePath ? fromStr : toStr];
 
