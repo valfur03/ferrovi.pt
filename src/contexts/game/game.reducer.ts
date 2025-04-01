@@ -2,8 +2,8 @@ import { Game } from "@/contexts/game/game.type";
 import { MetroStation } from "@/types/metro-station";
 
 export type GameAction =
-    | { type: "INIT"; payload: { path: Array<MetroStation> } }
-    | { type: "MAKE_GUESS"; payload: MetroStation };
+    | { type: "INIT"; payload: { path: Array<MetroStation>; guesses?: Array<MetroStation> } }
+    | { type: "ADD_GUESS"; payload: MetroStation };
 
 export const gameReducer = (state: Game | null, action: GameAction): Game | null => {
     switch (action.type) {
@@ -11,16 +11,12 @@ export const gameReducer = (state: Game | null, action: GameAction): Game | null
             return {
                 endpoints: [action.payload.path[0], action.payload.path[action.payload.path.length - 1]],
                 solution: action.payload.path.slice(1, -1),
-                guesses: [],
+                guesses: action.payload.guesses ?? [],
             };
         }
-        case "MAKE_GUESS": {
+        case "ADD_GUESS": {
             if (state === null) {
                 return null;
-            }
-
-            if (!!state.guesses.find(({ id }) => id === action.payload.id)) {
-                return state;
             }
 
             return { ...state, guesses: state.guesses.concat(action.payload) };

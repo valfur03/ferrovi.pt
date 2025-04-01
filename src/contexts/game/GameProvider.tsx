@@ -5,25 +5,37 @@ import { GameContext } from "@/contexts/game/game.context";
 import { gameReducer } from "@/contexts/game/game.reducer";
 import { findMetroStationByName } from "@/utils/metro";
 import { MetroStation } from "@/types/metro-station";
+import { useGameStorage } from "@/hooks/use-game-storage";
 
 export type GameProviderProps = PropsWithChildren;
 
 export const GameProvider = ({ children }: GameProviderProps) => {
+    const { save, setSave } = useGameStorage();
     const [state, dispatch] = useReducer(gameReducer, null);
 
-    const init = useCallback((options: { path: Array<MetroStation> }) => {
-        return dispatch({ type: "INIT", payload: options });
-    }, []);
+    const init = useCallback(
+        (options: { path: Array<MetroStation> }) => {
+            return dispatch({ type: "INIT", payload: { ...options, guesses: save.guesses } });
+        },
+        [save],
+    );
 
-    const makeGuess = useCallback((guess: string) => {
-        const station = findMetroStationByName(guess);
-        if (station === undefined) {
-            return false;
-        }
+    const makeGuess = useCallback(
+        (guess: string) => {
+            const station = findMetroStationByName(guess);
+            if (state === null || station === undefined) {
+                return false;
+            }
 
-        dispatch({ type: "MAKE_GUESS", payload: station });
-        return true;
-    }, []);
+            if (!state.guesses.find(({ id }) => id === station.id)) {
+                setSave((save) => ({ ...save, guesses: save.guesses.concat(station) }));
+                dispatch({ type: "ADD_GUESS", payload: station });
+            }
+
+            return true;
+        },
+        [state, setSave],
+    );
 
     const latestGuess = useMemo(() => {
         if (state === null || state.guesses.length <= 0) {
