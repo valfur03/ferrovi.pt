@@ -6,6 +6,7 @@ import { gameReducer } from "@/contexts/game/game.reducer";
 import { findMetroStationByName } from "@/utils/metro";
 import { MetroStation } from "@/types/metro-station";
 import { useGameStorage } from "@/hooks/use-game-storage";
+import { encodeDateForZod } from "@/utils/date";
 
 export type GameProviderProps = PropsWithChildren;
 
@@ -73,8 +74,21 @@ export const GameProvider = ({ children }: GameProviderProps) => {
             return false;
         }
 
-        return discoveredPath.find((metroStations) => metroStations === null) === undefined;
-    }, [discoveredPath]);
+        const hasWon = discoveredPath.find((metroStations) => metroStations === null) === undefined;
+
+        const encodedDate = encodeDateForZod();
+        if (hasWon) {
+            setSave((save) => {
+                if (save.victoriesHistory.includes(encodedDate)) {
+                    return save;
+                }
+
+                return { ...save, victoriesHistory: [...save.victoriesHistory, encodedDate] };
+            });
+        }
+
+        return hasWon;
+    }, [discoveredPath, save, setSave]);
 
     const value = useMemo(() => {
         return {

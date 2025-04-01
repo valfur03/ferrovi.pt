@@ -2,6 +2,7 @@ import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { findMetroStationById } from "@/utils/metro";
+import { encodeDateForZod } from "@/utils/date";
 
 export const LOCAL_STORAGE_KEY = "game";
 
@@ -9,6 +10,7 @@ export const LOCAL_STORAGE_KEY = "game";
 export const saveSchema = z
     .object({
         game: z.object({ date: z.string().date(), guesses: z.array(z.string()) }),
+        victoriesHistory: z.array(z.string().date()),
     })
     .transform(({ game, ...rest }, ctx) => ({
         ...rest,
@@ -30,10 +32,6 @@ export const saveSchema = z
 export type SaveSchemaEncodedType = z.input<typeof saveSchema>;
 export type SaveSchemaType = z.infer<typeof saveSchema>;
 
-// TODO move out
-export const encodeSaveDate = (date: Date = new Date()) =>
-    `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
-
 export const useGameStorage = () => {
     const ls = useLocalStorage();
 
@@ -41,7 +39,7 @@ export const useGameStorage = () => {
         const strData = ls.getItem(LOCAL_STORAGE_KEY);
 
         if (strData === null) {
-            const newSave: SaveSchemaType = { game: { date: encodeSaveDate(), guesses: [] } };
+            const newSave: SaveSchemaType = { game: { date: encodeDateForZod(), guesses: [] }, victoriesHistory: [] };
             ls.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newSave));
             return newSave;
         }
@@ -49,8 +47,8 @@ export const useGameStorage = () => {
         // TODO handle throw
         const data = saveSchema.parse(JSON.parse(strData));
 
-        if (encodeSaveDate() !== data.game.date) {
-            const newSave: SaveSchemaType = { game: { date: encodeSaveDate(), guesses: [] } };
+        if (encodeDateForZod() !== data.game.date) {
+            const newSave: SaveSchemaType = { game: { date: encodeDateForZod(), guesses: [] }, victoriesHistory: [] };
             ls.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newSave));
             return newSave;
         }
