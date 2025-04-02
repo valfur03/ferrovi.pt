@@ -7,7 +7,7 @@ export default async function Home() {
     const path = getPathChallengeOfTheDay();
 
     return (
-        <div className="min-h-screen flex flex-col items-stretch">
+        <div className="min-h-dvh flex flex-col items-stretch">
             <Navbar />
             <main className="w-full h-0 flex flex-col items-center grow md:gap-12">
                 {path !== null ? (
