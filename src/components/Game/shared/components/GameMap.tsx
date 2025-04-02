@@ -10,10 +10,13 @@ import { MapboxMetroDiscoveredNode } from "@/lib/mapbox/components/Mapbox/Mapbox
 import * as React from "react";
 import { MapboxMetroFromNode } from "@/lib/mapbox/components/Mapbox/MapboxMetroFromNode";
 import { MapboxMetroToNode } from "@/lib/mapbox/components/Mapbox/MapboxMetroToNode";
+import { useGame } from "@/contexts/game/use-game";
+import { GameVictoryConfetti } from "@/components/Game/shared/components/GameVictoryConfetti";
 
 export type GameMapProps = MapboxConfiguration;
 
 export const GameMap = ({ accessToken }: GameMapProps) => {
+    const { hasWon } = useGame();
     const { initialized, endpointsGeoJson, metroStationsGeoJson, rightPathsGeoJson, wrongPathsGeoJson } = useGameMap();
 
     if (!initialized) {
@@ -21,7 +24,7 @@ export const GameMap = ({ accessToken }: GameMapProps) => {
     }
 
     return (
-        <div className="w-full max-w-screen-md grow md:grow-0 md:h-128">
+        <div className="w-full max-w-screen-md grow md:grow-0 md:h-128 relative">
             <Map
                 mapboxAccessToken={accessToken}
                 mapStyle="mapbox://styles/hintauh/cm8oi8gph004801sk72xbgo2a"
@@ -55,6 +58,7 @@ export const GameMap = ({ accessToken }: GameMapProps) => {
                     <MapboxMetroToNode />
                 </Source>
             </Map>
+            {hasWon && <GameVictoryConfetti />}
         </div>
     );
 };
