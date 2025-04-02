@@ -1,6 +1,6 @@
 import { useGame } from "@/contexts/game/use-game";
 import { buildMapLayers } from "@/components/Game/shared/utils/build-map-layers";
-import { Feature, FeatureCollection, LineString, Point } from "geojson";
+import { Feature, FeatureCollection, GeoJsonProperties, LineString, Point } from "geojson";
 import { buildGeoJsonPointFromCoordinates } from "@/lib/mapbox/utils/build-geo-json-point-from-coordinates";
 
 export type UseGameMapReturnType =
@@ -14,7 +14,7 @@ export type UseGameMapReturnType =
     | {
           initialized: true;
           endpointsGeoJson: [Feature<Point>, Feature<Point>];
-          metroStationsGeoJson: FeatureCollection<Point>;
+          metroStationsGeoJson: FeatureCollection<Point, GeoJsonProperties & { label: string }>;
           rightPathsGeoJson: FeatureCollection<LineString>;
           wrongPathsGeoJson: FeatureCollection<LineString>;
       };

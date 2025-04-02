@@ -1,4 +1,4 @@
-import { Feature, FeatureCollection, LineString, Point } from "geojson";
+import { Feature, FeatureCollection, GeoJsonProperties, LineString, Point } from "geojson";
 import { metroGraph } from "@/data/metro-stations";
 import { MetroStation } from "@/types/metro-station";
 
@@ -8,11 +8,11 @@ export const buildMapLayers = (
     endpoints: [MetroStation, MetroStation],
 ) => {
     return discoveredStations.reduce<{
-        metroStationsGeoJson: FeatureCollection<Point>;
+        metroStationsGeoJson: FeatureCollection<Point, GeoJsonProperties & { label: string }>;
         rightPathsGeoJson: FeatureCollection<LineString>;
         wrongPathsGeoJson: FeatureCollection<LineString>;
     }>(
-        ({ metroStationsGeoJson, rightPathsGeoJson, wrongPathsGeoJson }, { id, rightGuess, coordinates }) => {
+        ({ metroStationsGeoJson, rightPathsGeoJson, wrongPathsGeoJson }, { id, rightGuess, coordinates, name }) => {
             const siblings = metroGraph.get(id);
 
             if (siblings === undefined) {
@@ -66,9 +66,9 @@ export const buildMapLayers = (
                 [[], []],
             );
 
-            const newMetroStation: Array<Feature<Point>> =
+            const newMetroStation: Array<Feature<Point, GeoJsonProperties & { label: string }>> =
                 id !== endpoints[0].id && id !== endpoints[1].id
-                    ? [{ type: "Feature", properties: {}, geometry: { type: "Point", coordinates } }]
+                    ? [{ type: "Feature", properties: { label: name }, geometry: { type: "Point", coordinates } }]
                     : [];
 
             return {
