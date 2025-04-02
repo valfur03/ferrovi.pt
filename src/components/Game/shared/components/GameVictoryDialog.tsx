@@ -10,7 +10,9 @@ export const GameVictoryDialog = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
-        setIsOpen(hasWon && hasPlayed);
+        setTimeout(() => {
+            setIsOpen(hasWon && hasPlayed);
+        }, 1000);
     }, [hasWon, hasPlayed]);
 
     return (
