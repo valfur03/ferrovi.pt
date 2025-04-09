@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "@/app/providers";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
     title: "Ferrovipathe : Le jeu",
@@ -16,7 +17,10 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className="antialiased">
-                <Providers>{children}</Providers>
+                <Providers>
+                    {children}
+                    <Analytics />
+                </Providers>
             </body>
         </html>
     );
