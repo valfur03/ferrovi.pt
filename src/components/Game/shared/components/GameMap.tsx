@@ -25,7 +25,7 @@ export const GameMap = ({ accessToken }: GameMapProps) => {
     }
 
     return (
-        <div className="w-full max-w-screen-md grow md:grow-0 md:h-128 relative">
+        <div className="w-full max-w-screen-md grow md:grow-0 md:h-128 [&_.mapboxgl-ctrl-bottom-right]:max-md:!bottom-2 [&_.mapboxgl-ctrl-bottom]:max-md:!bottom-2 [&_.mapboxgl-ctrl-bottom-left]:max-md:!bottom-2">
             <Map
                 mapboxAccessToken={accessToken}
                 mapStyle="mapbox://styles/hintauh/cm8oi8gph004801sk72xbgo2a"
