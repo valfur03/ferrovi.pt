@@ -7,12 +7,17 @@ export type SolutionsStats = Record<string, number>;
 
 async function main() {
     const stats = Object.entries(allMetroSolutions).reduce<Record<string, number>>((acc, [, solutionsFrom]) => {
-        const stats = Object.entries(solutionsFrom).reduce<Record<string, number>>((acc, [, solution]) => {
-            return {
-                ...acc,
-                [solution.length]: (acc[solution.length] ?? 0) + 1,
-            };
-        }, {});
+        const stats =
+            solutionsFrom !== null
+                ? Object.entries(solutionsFrom).reduce<Record<string, number>>((acc, [, solution]) => {
+                      return solution !== null
+                          ? {
+                                ...acc,
+                                [solution.length]: (acc[solution.length] ?? 0) + 1,
+                            }
+                          : {};
+                  }, {})
+                : {};
 
         return {
             ...acc,
