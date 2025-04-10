@@ -17,7 +17,11 @@ async function main() {
                     ...acc,
                     ...Object.entries(solutionsFrom)
                         .reduce<Array<[string, string]>>((acc, [to, solution], index2) => {
-                            if (solution.length < MIN_NUMBER_OF_STEPS || solution.length > MAX_NUMBER_OF_STEPS) {
+                            if (
+                                solution === null ||
+                                solution.length < MIN_NUMBER_OF_STEPS ||
+                                solution.length > MAX_NUMBER_OF_STEPS
+                            ) {
                                 return acc;
                             }
 
