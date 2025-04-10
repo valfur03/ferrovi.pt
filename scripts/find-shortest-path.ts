@@ -5,7 +5,7 @@ import { metroGraph, metroStations } from "@/data/metro-stations";
 
 async function main() {
     const path = getShortestPathFromAToB(metroGraph, metroStations.sentier.id, metroStations.gareDAusterlitz.id);
-    console.log("Full path: %O\nTotals stop: %d", path, path.length);
+    console.log("Full path: %O\nTotals stop: %d", path, path?.length ?? NaN);
 }
 
 main();

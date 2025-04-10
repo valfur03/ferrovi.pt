@@ -21,7 +21,11 @@ export const getPathChallengeOfTheDay = (date: Date = new Date()) => {
     const from = metroStations[reversePath ? toStr : fromStr];
     const to = metroStations[reversePath ? fromStr : toStr];
 
-    return getShortestPathFromAToB(metroGraph, from.id, to.id).map(([, metroStation]) => {
+    const shortestPath = getShortestPathFromAToB(metroGraph, from.id, to.id);
+    if (shortestPath === null) {
+        return null;
+    }
+    return shortestPath.map(([, metroStation]) => {
         return metroStations[metroStation as keyof typeof metroStations];
     });
 };

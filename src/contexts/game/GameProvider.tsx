@@ -1,13 +1,13 @@
 "use client";
 
 import { PropsWithChildren, useCallback, useMemo, useReducer } from "react";
-import { GameContext } from "@/contexts/game/game.context";
+import { GameContext, GameContextType } from "@/contexts/game/game.context";
 import { gameReducer } from "@/contexts/game/game.reducer";
 import { findMetroStationByName } from "@/utils/metro";
 import { MetroStation } from "@/types/metro-station";
 import { useGameStorage } from "@/hooks/use-game-storage";
 import { encodeDateForZod } from "@/utils/date";
-import { areNodesConnected, createSubgraph } from "@/lib/metro-graph";
+import { areNodesConnected, createSubgraph, getShortestPathFromAToB } from "@/lib/metro-graph";
 import { metroGraph } from "@/data/metro-stations";
 
 export type GameProviderProps = PropsWithChildren;
@@ -98,6 +98,61 @@ export const GameProvider = ({ children }: GameProviderProps) => {
         return hasWon;
     }, [discoveredPath, discoveredStations, setSave, state]);
 
+    const stats = useMemo((): GameContextType["stats"] => {
+        if (state === null || discoveredStations === null) {
+            return null;
+        }
+
+        const shortestPath = getShortestPathFromAToB(
+            createSubgraph(metroGraph, discoveredStations),
+            state.endpoints[0].id,
+            state.endpoints[1].id,
+        );
+        if (shortestPath === null) {
+            return null;
+        }
+        const stopsValue = shortestPath.length - 2;
+        const guessesValue = state.guesses.length;
+        const daysValue =
+            save.victoriesHistory.length === 0
+                ? 0
+                : save.victoriesHistory.slice(1).reduce<[number, string]>(
+                      ([streak, prevDateStr], dateStr) => {
+                          const date = new Date(dateStr);
+                          date.setDate(date.getDate() - 1);
+                          const prevDate = new Date(prevDateStr);
+                          if (
+                              date.getFullYear() !== prevDate.getFullYear() ||
+                              date.getMonth() !== prevDate.getMonth() ||
+                              date.getDate() !== prevDate.getDate()
+                          ) {
+                              return [streak, dateStr];
+                          }
+
+                          return [streak + 1, dateStr];
+                      },
+                      [1, save.victoriesHistory[0]],
+                  )[0];
+
+        return {
+            stops: {
+                value: stopsValue,
+                label: "arrêts",
+                isBest: stopsValue <= state.solution.length,
+            },
+            guesses: {
+                value: guessesValue,
+                label: "essais",
+                isBest: guessesValue <= stopsValue,
+            },
+            days: {
+                value: daysValue,
+                label: daysValue > 1 ? "jours consécutifs" : "jour consécutif",
+                isBest: true,
+            },
+        };
+    }, [discoveredStations, save, state]);
+
     const value = useMemo(() => {
         return {
             init,
@@ -107,10 +162,11 @@ export const GameProvider = ({ children }: GameProviderProps) => {
             discoveredPath,
             discoveredStations,
             hasWon,
+            stats,
             endpoints: state?.endpoints ?? null,
             hasPlayed: state?.hasPlayed ?? false,
         };
-    }, [state, init, makeGuess, latestGuess, discoveredPath, discoveredStations, hasWon]);
+    }, [state, init, makeGuess, latestGuess, discoveredPath, discoveredStations, hasWon, stats]);
 
     return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
 };

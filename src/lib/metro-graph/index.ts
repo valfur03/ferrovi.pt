@@ -27,7 +27,7 @@ export const getShortestPathFromAToB = (
     graph: Map<string, Set<[string, MetroStation]>>,
     a: string,
     b: string,
-): Array<[Array<string> | null, string]> => {
+): Array<[Array<string> | null, string]> | null => {
     if (a === b) {
         return [[null, a]];
     }
@@ -95,12 +95,17 @@ export const getShortestPathFromAToB = (
         currentNode.visited = true;
 
         let lowestCost = Infinity;
+        const currentNearestUnvisitedNode = nearestUnvisitedNode;
         for (const [nodeId, node] of costs.entries()) {
             if (!node.visited && node.cost < lowestCost) {
                 nearestUnvisitedNode = nodeId;
                 lowestCost = node.cost;
                 currentLine = node.path[node.path.length - 1][0];
             }
+        }
+        if (currentNearestUnvisitedNode === nearestUnvisitedNode) {
+            // console.log("no more node to visit, aborting");
+            return null;
         }
 
         // console.log("current target node path => %O", targetNode.path);
@@ -118,7 +123,14 @@ export const createSubgraph = (graph: Map<string, Set<[string, MetroStation]>>, 
             throw new Error("node cannot be omitted");
         }
 
-        subgraph.set(id, currentNode);
+        const newSiblings = new Set<[string, MetroStation]>();
+        Array.from(currentNode).forEach(([line, metroStation]) => {
+            if (metroStations.find(({ id }) => id === metroStation.id) !== undefined) {
+                newSiblings.add([line, metroStation]);
+            }
+        });
+
+        subgraph.set(id, newSiblings);
     });
 
     return subgraph;
