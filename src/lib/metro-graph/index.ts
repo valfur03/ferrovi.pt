@@ -108,3 +108,55 @@ export const getShortestPathFromAToB = (
 
     return [...targetNode.path, [targetNode.path[targetNode.path.length - 1][0], nearestUnvisitedNode]];
 };
+
+export const createSubgraph = (graph: Map<string, Set<[string, MetroStation]>>, metroStations: Array<MetroStation>) => {
+    const subgraph: typeof graph = new Map();
+
+    metroStations.forEach(({ id }) => {
+        const currentNode = graph.get(id);
+        if (currentNode === undefined) {
+            throw new Error("node cannot be omitted");
+        }
+
+        subgraph.set(id, currentNode);
+    });
+
+    return subgraph;
+};
+
+export const areNodesConnected = (subgraph: Map<string, Set<[string, MetroStation]>>, a: string, b: string) => {
+    let nodesQueue = [a];
+    const visitedNodes: Array<string> = [];
+
+    while (nodesQueue.length > 0) {
+        const currentNode = nodesQueue[0];
+        // console.log("checking %s", currentNode);
+        if (currentNode === b) {
+            return true;
+        }
+
+        visitedNodes.unshift(currentNode);
+
+        const siblings = subgraph.get(currentNode);
+        // console.log("node is %sin the subgraph", siblings !== undefined ? "" : "not ");
+
+        if (siblings !== undefined) {
+            const nextNodes = Array.from(siblings)
+                .map(([, { id }]) => {
+                    if (!subgraph.has(id) || visitedNodes.includes(id)) {
+                        return null;
+                    }
+                    return id;
+                })
+                .filter((station) => station !== null);
+
+            // console.log("next nodes %O", nextNodes);
+
+            nodesQueue = [...nodesQueue, ...nextNodes];
+        }
+
+        nodesQueue.shift();
+    }
+
+    return false;
+};

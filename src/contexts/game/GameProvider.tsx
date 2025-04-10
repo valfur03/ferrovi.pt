@@ -7,6 +7,8 @@ import { findMetroStationByName } from "@/utils/metro";
 import { MetroStation } from "@/types/metro-station";
 import { useGameStorage } from "@/hooks/use-game-storage";
 import { encodeDateForZod } from "@/utils/date";
+import { areNodesConnected, createSubgraph } from "@/lib/metro-graph";
+import { metroGraph } from "@/data/metro-stations";
 
 export type GameProviderProps = PropsWithChildren;
 
@@ -70,11 +72,17 @@ export const GameProvider = ({ children }: GameProviderProps) => {
     }, [state]);
 
     const hasWon = useMemo(() => {
-        if (discoveredPath === null) {
+        if (state === null || discoveredPath === null || discoveredStations === null) {
             return false;
         }
 
-        const hasWon = discoveredPath.find((metroStations) => metroStations === null) === undefined;
+        const hasWon =
+            discoveredPath.find((metroStations) => metroStations === null) === undefined ||
+            areNodesConnected(
+                createSubgraph(metroGraph, discoveredStations),
+                state.endpoints[0].id,
+                state.endpoints[1].id,
+            );
 
         const encodedDate = encodeDateForZod();
         if (hasWon) {
@@ -88,7 +96,7 @@ export const GameProvider = ({ children }: GameProviderProps) => {
         }
 
         return hasWon;
-    }, [discoveredPath, setSave]);
+    }, [discoveredPath, discoveredStations, setSave, state]);
 
     const value = useMemo(() => {
         return {
