@@ -49,7 +49,7 @@ export const GameInput = () => {
         <div className="w-full max-w-screen-sm">
             <SearchBar
                 name="metro-station"
-                placeholder="Porte des Lilas"
+                placeholder="Entrez le nom d'une station"
                 disabled={hasWon}
                 aria-disabled={hasWon}
                 value={inputValue}
