@@ -12,7 +12,7 @@ export const Button = ({ asChild, className, ...props }: ButtonProps) => {
         <Comp
             {...props}
             className={cn(
-                "px-4 py-2 text-neutral-600 cursor-pointer border-4 font-bold border-neutral-600 rounded-lg",
+                "px-4 py-2 text-center text-neutral-600 cursor-pointer border-4 font-bold border-neutral-600 rounded-lg",
                 className,
             )}
         />
