@@ -4,8 +4,7 @@ import React, { useCallback, useState } from "react";
 import { metroStationsList } from "@/data/metro-stations";
 import { MetroStation } from "@/types/metro-station";
 import { searchScore } from "@/utils/search";
-import { TweetButton } from "@/components/TweetButton/TweetButton";
-import { GAME_STARTING_DATE } from "@/constants/game";
+import { GameTweetButton } from "@/components/Game/shared/components/GameTweetButton";
 
 export const GameInput = () => {
     const inputBaseValue = "";
@@ -62,24 +61,7 @@ export const GameInput = () => {
             {hasWon && (
                 <div className="flex flex-col gap-4 p-4">
                     <p>Vous avez fini la partie d&apos;aujourd&apos;hui, revenez demain pour un nouveau challenge !</p>
-                    {stats !== null && (
-                        <TweetButton
-                            text={
-                                `#ferrovipathe jour ${
-                                    Math.floor((Date.now() - GAME_STARTING_DATE.getTime()) / (1000 * 60 * 60 * 24)) + 1
-                                }` +
-                                "\n" +
-                                Object.values(stats)
-                                    .map(({ value, label, isBest }) => `${isBest ? "🟩" : "⬛"} ${value} ${label}`)
-                                    .join("\n") +
-                                "\n" +
-                                "ferrovi.pt"
-                            }
-                            className="w-full"
-                        >
-                            Partager mon score sur X
-                        </TweetButton>
-                    )}
+                    <GameTweetButton />
                 </div>
             )}
         </div>

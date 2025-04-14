@@ -4,8 +4,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { useGame } from "@/contexts/game/use-game";
 import { Button } from "@/components/Button/Button";
 import React, { useEffect, useState } from "react";
-import { TweetButton } from "@/components/TweetButton/TweetButton";
-import { GAME_STARTING_DATE } from "@/constants/game";
+import { GameTweetButton } from "@/components/Game/shared/components/GameTweetButton";
 
 export const GameVictoryDialog = () => {
     const { hasWon, hasPlayed, stats } = useGame();
@@ -42,26 +41,7 @@ export const GameVictoryDialog = () => {
                         </>
                     )}
                     <div className="flex flex-col gap-3 w-full">
-                        {stats !== null && (
-                            <TweetButton
-                                text={
-                                    `#ferrovipathe jour ${
-                                        Math.floor(
-                                            (Date.now() - GAME_STARTING_DATE.getTime()) / (1000 * 60 * 60 * 24),
-                                        ) + 1
-                                    }` +
-                                    "\n" +
-                                    Object.values(stats)
-                                        .map(({ value, label, isBest }) => `${isBest ? "🟩" : "⬛"} ${value} ${label}`)
-                                        .join("\n") +
-                                    "\n" +
-                                    "ferrovi.pt"
-                                }
-                                className="w-full"
-                            >
-                                Partager mon score sur X
-                            </TweetButton>
-                        )}
+                        <GameTweetButton />
                         <Dialog.Close asChild>
                             <Button className="w-full" aria-label="Close">
                                 Fermer
