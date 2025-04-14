@@ -21,7 +21,7 @@ export const useGameStorage = () => {
         const data = saveSchema.parse(JSON.parse(strData));
 
         if (encodeDateForZod() !== data.game.date) {
-            const newSave: SaveSchemaType = { game: { date: encodeDateForZod(), guesses: [] }, victoriesHistory: [] };
+            const newSave: SaveSchemaType = { ...data, game: { date: encodeDateForZod(), guesses: [] } };
             ls.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newSave));
             return newSave;
         }
