@@ -14,7 +14,7 @@ export const GameFromTo = () => {
     const [from, to] = endpoints;
 
     return (
-        <div className="w-full p-4 max-w-screen-md md:px-0 grid grid-cols-[1fr_calc(var(--spacing)*8)_1fr] justify-center items-center gap-3">
+        <div className="w-full sticky top-0 p-4 max-w-screen-md md:px-0 grid grid-cols-[1fr_calc(var(--spacing)*8)_1fr] justify-center items-center gap-3">
             <GameProblemStation>{from.name}</GameProblemStation>
             <ArrowRightIcon className="w-full h-full block stroke-12 [&>path]:stroke-inherit" />
             <GameProblemStation>{to.name}</GameProblemStation>
