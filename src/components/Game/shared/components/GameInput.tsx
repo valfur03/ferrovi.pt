@@ -9,7 +9,7 @@ import { GameTweetButton } from "@/components/Game/shared/components/GameTweetBu
 export const GameInput = () => {
     const inputBaseValue = "";
     const [inputValue, setInputValue] = useState(inputBaseValue);
-    const { makeGuess, hasWon, stats } = useGame();
+    const { makeGuess, hasWon } = useGame();
 
     const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
         setInputValue(e.target.value);
