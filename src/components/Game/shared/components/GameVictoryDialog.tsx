@@ -38,27 +38,29 @@ export const GameVictoryDialog = () => {
                                     </div>
                                 ))}
                             </div>
-                            <div>
-                                <TweetButton
-                                    text={
-                                        "#ferrovipathe jour 42\n" +
-                                        "\n" +
-                                        Object.values(stats)
-                                            .map(
-                                                ({ value, label, isBest }) =>
-                                                    `${isBest ? "🟩" : "⬛"} ${value} ${label}`,
-                                            )
-                                            .join("\n")
-                                    }
-                                >
-                                    Partager sur X
-                                </TweetButton>
-                            </div>
                         </>
                     )}
-                    <Dialog.Close asChild>
-                        <Button aria-label="Close">Fermer</Button>
-                    </Dialog.Close>
+                    <div className="flex flex-col gap-3 w-full">
+                        {stats !== null && (
+                            <TweetButton
+                                text={
+                                    "#ferrovipathe jour 42\n" +
+                                    "\n" +
+                                    Object.values(stats)
+                                        .map(({ value, label, isBest }) => `${isBest ? "🟩" : "⬛"} ${value} ${label}`)
+                                        .join("\n")
+                                }
+                                className="w-full"
+                            >
+                                Partager mon score sur X
+                            </TweetButton>
+                        )}
+                        <Dialog.Close asChild>
+                            <Button className="w-full" aria-label="Close">
+                                Fermer
+                            </Button>
+                        </Dialog.Close>
+                    </div>
                 </Dialog.Content>
             </Dialog.Portal>
         </Dialog.Root>
