@@ -5,6 +5,7 @@ import { metroStationsList } from "@/data/metro-stations";
 import { MetroStation } from "@/types/metro-station";
 import { searchScore } from "@/utils/search";
 import { TweetButton } from "@/components/TweetButton/TweetButton";
+import { GAME_STARTING_DATE } from "@/constants/game";
 
 export const GameInput = () => {
     const inputBaseValue = "";
@@ -64,11 +65,15 @@ export const GameInput = () => {
                     {stats !== null && (
                         <TweetButton
                             text={
-                                "#ferrovipathe jour 42\n" +
+                                `#ferrovipathe jour ${
+                                    Math.floor((Date.now() - GAME_STARTING_DATE.getTime()) / (1000 * 60 * 60 * 24)) + 1
+                                }` +
                                 "\n" +
                                 Object.values(stats)
                                     .map(({ value, label, isBest }) => `${isBest ? "🟩" : "⬛"} ${value} ${label}`)
-                                    .join("\n")
+                                    .join("\n") +
+                                "\n" +
+                                "ferrovi.pt"
                             }
                             className="w-full"
                         >

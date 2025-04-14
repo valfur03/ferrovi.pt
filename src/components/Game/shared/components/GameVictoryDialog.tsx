@@ -5,6 +5,7 @@ import { useGame } from "@/contexts/game/use-game";
 import { Button } from "@/components/Button/Button";
 import React, { useEffect, useState } from "react";
 import { TweetButton } from "@/components/TweetButton/TweetButton";
+import { GAME_STARTING_DATE } from "@/constants/game";
 
 export const GameVictoryDialog = () => {
     const { hasWon, hasPlayed, stats } = useGame();
@@ -44,11 +45,17 @@ export const GameVictoryDialog = () => {
                         {stats !== null && (
                             <TweetButton
                                 text={
-                                    "#ferrovipathe jour 42\n" +
+                                    `#ferrovipathe jour ${
+                                        Math.floor(
+                                            (Date.now() - GAME_STARTING_DATE.getTime()) / (1000 * 60 * 60 * 24),
+                                        ) + 1
+                                    }` +
                                     "\n" +
                                     Object.values(stats)
                                         .map(({ value, label, isBest }) => `${isBest ? "🟩" : "⬛"} ${value} ${label}`)
-                                        .join("\n")
+                                        .join("\n") +
+                                    "\n" +
+                                    "ferrovi.pt"
                                 }
                                 className="w-full"
                             >
