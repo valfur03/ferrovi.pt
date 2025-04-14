@@ -4,11 +4,12 @@ import React, { useCallback, useState } from "react";
 import { metroStationsList } from "@/data/metro-stations";
 import { MetroStation } from "@/types/metro-station";
 import { searchScore } from "@/utils/search";
+import { TweetButton } from "@/components/TweetButton/TweetButton";
 
 export const GameInput = () => {
     const inputBaseValue = "";
     const [inputValue, setInputValue] = useState(inputBaseValue);
-    const { makeGuess, hasWon } = useGame();
+    const { makeGuess, hasWon, stats } = useGame();
 
     const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
         setInputValue(e.target.value);
@@ -57,6 +58,25 @@ export const GameInput = () => {
                 onSearch={handleSearch}
                 onValueChange={handleStationSelect}
             />
+            {hasWon && (
+                <div className="flex flex-col gap-4 p-4">
+                    <p>Vous avez fini la partie d&apos;aujourd&apos;hui, revenez demain pour un nouveau challenge !</p>
+                    {stats !== null && (
+                        <TweetButton
+                            text={
+                                "#ferrovipathe jour 42\n" +
+                                "\n" +
+                                Object.values(stats)
+                                    .map(({ value, label, isBest }) => `${isBest ? "🟩" : "⬛"} ${value} ${label}`)
+                                    .join("\n")
+                            }
+                            className="w-full"
+                        >
+                            Partager mon score sur X
+                        </TweetButton>
+                    )}
+                </div>
+            )}
         </div>
     );
 };
