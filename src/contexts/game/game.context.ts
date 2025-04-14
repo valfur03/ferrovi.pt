@@ -13,7 +13,7 @@ export type GameContextType = {
     discoveredPath: Array<MetroStation | null> | null;
     discoveredStations: Array<MetroStation & { rightGuess: boolean }> | null;
     hasWon: boolean;
-    stats: Record<string, { value: React.ReactNode; label: string; isBest: boolean }> | null;
+    stats: Record<"stops" | "guesses" | "days", { value: React.ReactNode; label: string; isBest: boolean }> | null;
     hasPlayed: boolean;
 };
 
