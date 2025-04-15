@@ -6,27 +6,50 @@ import { geoGameReducer } from "@/contexts/geo-game/geo-game.reducer";
 import { MetroStation } from "@/types/metro-station";
 import { haversineDistance } from "@/utils/coordinates";
 import { calculateScore } from "@/utils/geo-game";
+import { useGeoGameStorage } from "@/hooks/use-geo-game-storage";
+import { encodeDateForZod } from "@/utils/date";
 
 export type GeoGameProviderProps = PropsWithChildren;
 
 export const GeoGameProvider = ({ children }: GeoGameProviderProps) => {
+    const { save, setSave } = useGeoGameStorage();
     const [state, dispatch] = useReducer(geoGameReducer, null);
 
-    const init = useCallback((options: { solutions: Array<MetroStation> }) => {
-        return dispatch({ type: "INIT", payload: options });
-    }, []);
+    const init = useCallback(
+        (options: { solutions: Array<MetroStation> }) => {
+            return dispatch({ type: "INIT", payload: { ...options, guesses: save.game.guesses } });
+        },
+        [save],
+    );
 
-    const makeGuess = useCallback((coordinates: [number, number]) => {
-        return dispatch({ type: "MAKE_GUESS", payload: coordinates });
-    }, []);
+    const makeGuess = useCallback(
+        (coordinates: [number, number]) => {
+            setSave((save) => ({ ...save, game: { ...save.game, guesses: [...save.game.guesses, coordinates] } }));
+            return dispatch({ type: "MAKE_GUESS", payload: coordinates });
+        },
+        [setSave],
+    );
 
     const hasWon = useMemo(() => {
         if (state === null) {
             return false;
         }
 
-        return state.solutions.length <= state.guesses.length;
-    }, [state]);
+        const hasWon = state.solutions.length <= state.guesses.length;
+
+        if (hasWon) {
+            setSave((save) => {
+                const encodedDate = encodeDateForZod();
+                if (save.victoriesHistory.includes(encodedDate)) {
+                    return save;
+                }
+
+                return { ...save, victoriesHistory: [...save.victoriesHistory, encodedDate] };
+            });
+        }
+
+        return hasWon;
+    }, [setSave, state]);
 
     const currentStation = useMemo(() => {
         if (state === null || hasWon) {

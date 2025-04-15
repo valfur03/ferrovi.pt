@@ -2,7 +2,7 @@ import { GeoGame } from "@/contexts/geo-game/geo-game.type";
 import { MetroStation } from "@/types/metro-station";
 
 export type GeoGameAction =
-    | { type: "INIT"; payload: { solutions: Array<MetroStation> } }
+    | { type: "INIT"; payload: { solutions: Array<MetroStation>; guesses?: Array<[number, number]> } }
     | { type: "MAKE_GUESS"; payload: [number, number] };
 
 export const geoGameReducer = (state: GeoGame | null, action: GeoGameAction): GeoGame | null => {
@@ -10,7 +10,7 @@ export const geoGameReducer = (state: GeoGame | null, action: GeoGameAction): Ge
         case "INIT": {
             return {
                 solutions: action.payload.solutions,
-                guesses: [],
+                guesses: action.payload.guesses ?? [],
                 hasPlayed: false,
             };
         }
