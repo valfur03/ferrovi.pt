@@ -18,6 +18,14 @@ export const GeoGameProvider = ({ children }: GeoGameProviderProps) => {
         return dispatch({ type: "MAKE_GUESS", payload: coordinates });
     }, []);
 
+    const solutions = useMemo(() => {
+        if (state === null) {
+            return [];
+        }
+
+        return state.solutions.slice(0, state.guesses.length);
+    }, [state]);
+
     const hasWon = useMemo(() => {
         return false;
     }, []);
@@ -27,10 +35,11 @@ export const GeoGameProvider = ({ children }: GeoGameProviderProps) => {
             init,
             initialized: state !== null,
             makeGuess,
+            solutions,
             hasWon,
             hasPlayed: state?.hasPlayed ?? false,
         };
-    }, [init, state, makeGuess, hasWon]);
+    }, [init, state, makeGuess, solutions, hasWon]);
 
     return <GeoGameContext.Provider value={value}>{children}</GeoGameContext.Provider>;
 };

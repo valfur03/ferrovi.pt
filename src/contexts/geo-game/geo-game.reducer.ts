@@ -10,11 +10,16 @@ export const geoGameReducer = (state: GeoGame | null, action: GeoGameAction): Ge
         case "INIT": {
             return {
                 solutions: action.payload.solutions,
+                guesses: [],
                 hasPlayed: false,
             };
         }
         case "MAKE_GUESS": {
-            return state;
+            if (state === null) {
+                return state;
+            }
+
+            return { ...state, guesses: [...state.guesses, action.payload] };
         }
         default:
             return state;

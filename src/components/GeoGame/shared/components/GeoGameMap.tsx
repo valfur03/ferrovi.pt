@@ -5,6 +5,8 @@ import * as React from "react";
 import { useCallback } from "react";
 import { MapMouseEvent } from "mapbox-gl";
 import { MapboxGeoGuessPoint } from "@/lib/mapbox/components/Mapbox/MapboxGeoGuessPoint";
+import { MapboxMetroRightNode } from "@/lib/mapbox/components/Mapbox/MapboxMetroRightNode";
+import { useGeoGame } from "@/contexts/geo-game/use-geo-game";
 
 export type GeoGameMapProps = MapboxConfiguration & {
     mapPointSelection: { coordinates: [number, number] } | null;
@@ -12,6 +14,8 @@ export type GeoGameMapProps = MapboxConfiguration & {
 };
 
 export const GeoGameMap = ({ mapPointSelection, setMapPointSelection, accessToken }: GeoGameMapProps) => {
+    const { solutions } = useGeoGame();
+
     const handleClick = useCallback(
         (e: MapMouseEvent) => {
             setMapPointSelection({ coordinates: [e.lngLat.lng, e.lngLat.lat] });
@@ -39,6 +43,22 @@ export const GeoGameMap = ({ mapPointSelection, setMapPointSelection, accessToke
                 projection="globe"
                 reuseMaps
             >
+                <Source
+                    type="geojson"
+                    data={{
+                        type: "FeatureCollection",
+                        features: solutions.map(({ coordinates }) => ({
+                            type: "Feature",
+                            properties: {},
+                            geometry: {
+                                type: "Point",
+                                coordinates,
+                            },
+                        })),
+                    }}
+                >
+                    <MapboxMetroRightNode />
+                </Source>
                 {mapPointSelection !== null && (
                     <Source
                         type="geojson"
