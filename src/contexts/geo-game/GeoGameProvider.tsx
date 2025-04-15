@@ -19,7 +19,7 @@ export const GeoGameProvider = ({ children }: GeoGameProviderProps) => {
     }, []);
 
     const currentStation = useMemo(() => {
-        if (state === null) {
+        if (state === null || state.solutions.length <= state.guesses.length) {
             return null;
         }
 
