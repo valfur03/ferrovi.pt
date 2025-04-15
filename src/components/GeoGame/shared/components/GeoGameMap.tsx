@@ -7,6 +7,7 @@ import { MapMouseEvent } from "mapbox-gl";
 import { MapboxGeoGuessPoint } from "@/lib/mapbox/components/Mapbox/MapboxGeoGuessPoint";
 import { MapboxMetroRightNode } from "@/lib/mapbox/components/Mapbox/MapboxMetroRightNode";
 import { useGeoGame } from "@/contexts/geo-game/use-geo-game";
+import { VictoryConfetti } from "@/components/VictoryConfetti/VictoryConfetti";
 
 export type GeoGameMapProps = MapboxConfiguration & {
     mapPointSelection: { coordinates: [number, number] } | null;
