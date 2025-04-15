@@ -6,6 +6,7 @@ import { MapboxConfiguration } from "@/config/mapbox";
 import { GeoGameMap } from "@/components/GeoGame/shared/components/GeoGameMap";
 import { MetroStation } from "@/types/metro-station";
 import { GeoGameValidation } from "@/components/GeoGame/shared/components/GeoGameValidation";
+import { GeoGameStation } from "@/components/GeoGame/shared/components/GeoGameStation";
 
 export type GeoGameProps = {
     solutions: Array<MetroStation>;
@@ -24,6 +25,7 @@ export const GeoGame = ({ solutions, mapboxConfiguration }: GeoGameProps) => {
 
     return (
         <>
+            <GeoGameStation />
             <GeoGameMap
                 mapPointSelection={mapPointSelection}
                 setMapPointSelection={setMapPointSelection}

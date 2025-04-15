@@ -7,6 +7,7 @@ export type GeoGameContextType = {
     init: (options: { solutions: Array<MetroStation> }) => void;
     initialized: boolean;
     makeGuess: (coordinates: [number, number]) => void;
+    currentStation: Omit<MetroStation, "coordinates"> | null;
     solutions: Array<MetroStation>;
     hasWon: boolean;
     hasPlayed: boolean;
