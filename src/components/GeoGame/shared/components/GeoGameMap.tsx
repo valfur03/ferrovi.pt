@@ -21,9 +21,11 @@ export const GeoGameMap = ({ mapPointSelection, setMapPointSelection, accessToke
 
     const handleClick = useCallback(
         (e: MapMouseEvent) => {
-            setMapPointSelection({ coordinates: [e.lngLat.lng, e.lngLat.lat] });
+            if (!hasWon) {
+                setMapPointSelection({ coordinates: [e.lngLat.lng, e.lngLat.lat] });
+            }
         },
-        [setMapPointSelection],
+        [hasWon, setMapPointSelection],
     );
 
     return (

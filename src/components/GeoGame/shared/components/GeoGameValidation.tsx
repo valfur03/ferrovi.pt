@@ -9,7 +9,7 @@ export type GeoGameValidationProps = {
 };
 
 export const GeoGameValidation = ({ mapPointSelection, resetMapPointSelection }: GeoGameValidationProps) => {
-    const { makeGuess } = useGeoGame();
+    const { makeGuess, hasWon } = useGeoGame();
 
     const handleClick = useCallback(() => {
         if (mapPointSelection !== null) {
@@ -17,6 +17,10 @@ export const GeoGameValidation = ({ mapPointSelection, resetMapPointSelection }:
             resetMapPointSelection();
         }
     }, [makeGuess, mapPointSelection, resetMapPointSelection]);
+
+    if (hasWon) {
+        return null;
+    }
 
     return (
         <div className="absolute md:static bottom-4">
