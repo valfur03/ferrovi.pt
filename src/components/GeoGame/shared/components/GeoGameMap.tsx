@@ -1,0 +1,60 @@
+import { MapboxConfiguration } from "@/config/mapbox";
+import Map, { Source } from "react-map-gl/mapbox";
+import "mapbox-gl/dist/mapbox-gl.css";
+import * as React from "react";
+import { useCallback } from "react";
+import { MapMouseEvent } from "mapbox-gl";
+import { MapboxGeoGuessPoint } from "@/lib/mapbox/components/Mapbox/MapboxGeoGuessPoint";
+
+export type GeoGameMapProps = MapboxConfiguration & {
+    mapPointSelection: { coordinates: [number, number] } | null;
+    setMapPointSelection: React.Dispatch<React.SetStateAction<{ coordinates: [number, number] } | null>>;
+};
+
+export const GeoGameMap = ({ mapPointSelection, setMapPointSelection, accessToken }: GeoGameMapProps) => {
+    const handleClick = useCallback(
+        (e: MapMouseEvent) => {
+            setMapPointSelection({ coordinates: [e.lngLat.lng, e.lngLat.lat] });
+        },
+        [setMapPointSelection],
+    );
+
+    return (
+        <div className="w-full max-w-screen-md grow md:grow-0 md:h-128 [&_.mapboxgl-ctrl-bottom-right]:max-md:!bottom-2 [&_.mapboxgl-ctrl-bottom]:max-md:!bottom-2 [&_.mapboxgl-ctrl-bottom-left]:max-md:!bottom-2">
+            <Map
+                mapboxAccessToken={accessToken}
+                mapStyle="mapbox://styles/hintauh/cm8oi8gph004801sk72xbgo2a"
+                onClick={handleClick}
+                initialViewState={{
+                    longitude: 2.332,
+                    latitude: 48.86,
+                    zoom: 10.2,
+                }}
+                minZoom={10}
+                maxZoom={16}
+                maxBounds={[
+                    [2.2, 48.5],
+                    [2.55, 49],
+                ]}
+                projection="globe"
+                reuseMaps
+            >
+                {mapPointSelection !== null && (
+                    <Source
+                        type="geojson"
+                        data={{
+                            type: "Feature",
+                            properties: {},
+                            geometry: {
+                                type: "Point",
+                                coordinates: mapPointSelection.coordinates,
+                            },
+                        }}
+                    >
+                        <MapboxGeoGuessPoint />
+                    </Source>
+                )}
+            </Map>
+        </div>
+    );
+};
