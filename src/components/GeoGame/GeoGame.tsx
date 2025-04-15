@@ -1,7 +1,7 @@
 "use client";
 
 import { useGeoGame } from "@/contexts/geo-game/use-geo-game";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { MapboxConfiguration } from "@/config/mapbox";
 import { GeoGameMap } from "@/components/GeoGame/shared/components/GeoGameMap";
 import { MetroStation } from "@/types/metro-station";
@@ -17,6 +17,10 @@ export const GeoGame = ({ solutions, mapboxConfiguration }: GeoGameProps) => {
     const { init, initialized } = useGeoGame();
     const [mapPointSelection, setMapPointSelection] = useState<{ coordinates: [number, number] } | null>(null);
 
+    const resetMapPointSelection = useCallback(() => {
+        setMapPointSelection(null);
+    }, []);
+
     useEffect(() => {
         if (!initialized) {
             init({ solutions });
@@ -31,7 +35,7 @@ export const GeoGame = ({ solutions, mapboxConfiguration }: GeoGameProps) => {
                 setMapPointSelection={setMapPointSelection}
                 {...mapboxConfiguration}
             />
-            <GeoGameValidation mapPointSelection={mapPointSelection} />
+            <GeoGameValidation mapPointSelection={mapPointSelection} resetMapPointSelection={resetMapPointSelection} />
         </>
     );
 };
