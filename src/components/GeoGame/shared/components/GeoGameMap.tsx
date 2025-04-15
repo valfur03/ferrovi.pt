@@ -14,7 +14,7 @@ export type GeoGameMapProps = MapboxConfiguration & {
 };
 
 export const GeoGameMap = ({ mapPointSelection, setMapPointSelection, accessToken }: GeoGameMapProps) => {
-    const { solutions } = useGeoGame();
+    const { solutions, hasWon } = useGeoGame();
 
     const handleClick = useCallback(
         (e: MapMouseEvent) => {
@@ -75,6 +75,7 @@ export const GeoGameMap = ({ mapPointSelection, setMapPointSelection, accessToke
                     </Source>
                 )}
             </Map>
+            {hasWon && <VictoryConfetti />}
         </div>
     );
 };

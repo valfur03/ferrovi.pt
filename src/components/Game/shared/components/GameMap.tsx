@@ -11,7 +11,7 @@ import * as React from "react";
 import { MapboxMetroFromNode } from "@/lib/mapbox/components/Mapbox/MapboxMetroFromNode";
 import { MapboxMetroToNode } from "@/lib/mapbox/components/Mapbox/MapboxMetroToNode";
 import { useGame } from "@/contexts/game/use-game";
-import { GameVictoryConfetti } from "@/components/Game/shared/components/GameVictoryConfetti";
+import { VictoryConfetti } from "@/components/VictoryConfetti/VictoryConfetti";
 import { MapboxMetroNodeLabel } from "@/lib/mapbox/components/Mapbox/MapboxMetroNodeLabel";
 
 export type GameMapProps = MapboxConfiguration;
@@ -77,7 +77,7 @@ export const GameMap = ({ accessToken }: GameMapProps) => {
                     </Source>
                 ))}
             </Map>
-            {hasWon && <GameVictoryConfetti />}
+            {hasWon && <VictoryConfetti />}
         </div>
     );
 };

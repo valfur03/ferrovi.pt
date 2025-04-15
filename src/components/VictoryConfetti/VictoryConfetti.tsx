@@ -1,7 +1,7 @@
 import ConfettiExplosion from "react-confetti-blast";
 import * as React from "react";
 
-export const GameVictoryConfetti = () => {
+export const VictoryConfetti = () => {
     return (
         <ConfettiExplosion
             className="absolute top-1/4 left-1/2 -translate-1/2"
