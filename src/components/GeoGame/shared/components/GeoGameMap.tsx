@@ -8,6 +8,8 @@ import { MapboxGeoGuessPoint } from "@/lib/mapbox/components/Mapbox/MapboxGeoGue
 import { MapboxMetroRightNode } from "@/lib/mapbox/components/Mapbox/MapboxMetroRightNode";
 import { useGeoGame } from "@/contexts/geo-game/use-geo-game";
 import { VictoryConfetti } from "@/components/VictoryConfetti/VictoryConfetti";
+import { MapboxGeoGuessDistance } from "@/lib/mapbox/components/Mapbox/MapboxGeoGuessDistance";
+import { Feature, LineString } from "geojson";
 
 export type GeoGameMapProps = MapboxConfiguration & {
     mapPointSelection: { coordinates: [number, number] } | null;
@@ -15,7 +17,7 @@ export type GeoGameMapProps = MapboxConfiguration & {
 };
 
 export const GeoGameMap = ({ mapPointSelection, setMapPointSelection, accessToken }: GeoGameMapProps) => {
-    const { solutions, hasWon } = useGeoGame();
+    const { solutions, hasWon, guesses } = useGeoGame();
 
     const handleClick = useCallback(
         (e: MapMouseEvent) => {
@@ -48,6 +50,32 @@ export const GeoGameMap = ({ mapPointSelection, setMapPointSelection, accessToke
                     type="geojson"
                     data={{
                         type: "FeatureCollection",
+                        features: guesses.reduce<Array<Feature<LineString>>>((acc, coordinates, index) => {
+                            const solution = solutions[index];
+                            if (solution === undefined) {
+                                return acc;
+                            }
+
+                            return [
+                                ...acc,
+                                {
+                                    type: "Feature",
+                                    properties: {},
+                                    geometry: {
+                                        type: "LineString",
+                                        coordinates: [coordinates, solution.coordinates],
+                                    },
+                                },
+                            ];
+                        }, []),
+                    }}
+                >
+                    <MapboxGeoGuessDistance />
+                </Source>
+                <Source
+                    type="geojson"
+                    data={{
+                        type: "FeatureCollection",
                         features: solutions.map(({ coordinates }) => ({
                             type: "Feature",
                             properties: {},
@@ -59,6 +87,22 @@ export const GeoGameMap = ({ mapPointSelection, setMapPointSelection, accessToke
                     }}
                 >
                     <MapboxMetroRightNode />
+                </Source>
+                <Source
+                    type="geojson"
+                    data={{
+                        type: "FeatureCollection",
+                        features: guesses.map((coordinates) => ({
+                            type: "Feature",
+                            properties: {},
+                            geometry: {
+                                type: "Point",
+                                coordinates,
+                            },
+                        })),
+                    }}
+                >
+                    <MapboxGeoGuessPoint />
                 </Source>
                 {mapPointSelection !== null && (
                     <Source
