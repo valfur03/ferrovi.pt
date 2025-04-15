@@ -4,7 +4,6 @@ import { PropsWithChildren, useCallback, useMemo, useReducer } from "react";
 import { GeoGameContext } from "@/contexts/geo-game/geo-game.context";
 import { geoGameReducer } from "@/contexts/geo-game/geo-game.reducer";
 import { MetroStation } from "@/types/metro-station";
-import { Feature, LineString } from "geojson";
 import { haversineDistance } from "@/utils/coordinates";
 import { calculateScore } from "@/utils/geo-game";
 
