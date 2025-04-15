@@ -19,8 +19,16 @@ export const GeoGameValidation = ({ mapPointSelection, resetMapPointSelection }:
     }, [makeGuess, mapPointSelection, resetMapPointSelection]);
 
     return (
-        <Button disabled={mapPointSelection === null} aria-disabled={mapPointSelection === null} onClick={handleClick}>
-            Valider
-        </Button>
+        <div className="absolute md:static bottom-4">
+            <Button
+                disabled={mapPointSelection === null}
+                aria-disabled={mapPointSelection === null}
+                variant="primary"
+                className="min-w-32 min-h-10"
+                onClick={handleClick}
+            >
+                Valider
+            </Button>
+        </div>
     );
 };
