@@ -18,8 +18,8 @@ export const getPathChallengeOfTheDay = (date: Date = new Date()) => {
         keyof typeof metroStations,
         keyof typeof metroStations,
     ];
-    const from = metroStations[reversePath ? toStr : fromStr];
-    const to = metroStations[reversePath ? fromStr : toStr];
+    const from = metroStations.mairieDesLilas;
+    const to = metroStations.placeDesFetes;
 
     const shortestPath = getShortestPathFromAToB(metroGraph, from.id, to.id);
     if (shortestPath === null) {
