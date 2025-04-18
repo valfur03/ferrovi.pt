@@ -65,10 +65,7 @@ export const GameMap = ({ accessToken }: GameMapProps) => {
                             ...feature,
                             geometry: {
                                 ...feature.geometry,
-                                coordinates: [
-                                    feature.geometry.coordinates[0],
-                                    feature.geometry.coordinates[1] + 0.0005,
-                                ],
+                                coordinates: [feature.geometry.coordinates[0], feature.geometry.coordinates[1]],
                             },
                         }}
                         key={feature.properties.label}

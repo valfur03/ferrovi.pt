@@ -13,11 +13,14 @@ export const MapboxMetroNodeLabel = ({ children, ...props }: MapboxMetroNodeLabe
             type="symbol"
             layout={{
                 "text-field": children,
+                "text-variable-anchor": ["top", "bottom"],
+                "text-radial-offset": 1,
+                "text-justify": "auto",
                 "text-size": {
                     type: "exponential",
                     base: 1.6,
                     stops: [
-                        [13, 0],
+                        [9, 0],
                         [22, 800],
                     ],
                 },
