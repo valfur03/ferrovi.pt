@@ -1,4 +1,4 @@
-import { Game } from "@/components/Game/Game";
+import { PathGame } from "@/components/PathGame/PathGame";
 import { Navbar } from "@/components/Navbar/Navbar";
 import { mapboxConfiguration } from "@/config/mapbox";
 import { getPathChallengeOfTheDay } from "@/utils/game";
@@ -11,7 +11,7 @@ export default async function Home() {
             <Navbar />
             <main className="w-full h-0 flex flex-col items-center grow md:gap-12">
                 {path !== null ? (
-                    <Game path={path} mapboxConfiguration={mapboxConfiguration} />
+                    <PathGame {...path} mapboxConfiguration={mapboxConfiguration} />
                 ) : (
                     <p>Le jeu n&apos;a pas encore commencé, revenez plus tard !</p>
                 )}

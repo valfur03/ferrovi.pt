@@ -1,15 +1,20 @@
 import { SearchBar } from "@/components/SearchBar/SearchBar";
-import { useGame } from "@/contexts/game/use-game";
+import { usePathGameContext } from "@/contexts/path-game/use-path-game-context";
 import React, { useCallback, useState } from "react";
 import { metroStationsList } from "@/data/metro-stations";
 import { MetroStation } from "@/types/metro-station";
 import { searchScore } from "@/utils/search";
-import { GameTweetButton } from "@/components/Game/shared/components/GameTweetButton";
+import { PathGameTweetButton } from "@/components/PathGame/shared/components/PathGameTweetButton";
 
-export const GameInput = () => {
+export const PathGameInput = () => {
     const inputBaseValue = "";
     const [inputValue, setInputValue] = useState(inputBaseValue);
-    const { makeGuess, hasWon } = useGame();
+    const {
+        makeGuess,
+        gameState: {
+            current: { hasWon },
+        },
+    } = usePathGameContext();
 
     const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
         setInputValue(e.target.value);
@@ -61,7 +66,7 @@ export const GameInput = () => {
             {hasWon && (
                 <div className="flex flex-col gap-4 p-4">
                     <p>Vous avez fini la partie d&apos;aujourd&apos;hui, revenez demain pour un nouveau challenge !</p>
-                    <GameTweetButton />
+                    <PathGameTweetButton />
                 </div>
             )}
         </div>

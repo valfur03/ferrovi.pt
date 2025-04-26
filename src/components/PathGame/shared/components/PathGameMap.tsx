@@ -4,25 +4,22 @@ import { MapboxConfiguration } from "@/config/mapbox";
 import Map, { Source } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { MapboxMetroDashedEdge } from "@/lib/mapbox/components/Mapbox/MapboxMetroDashedEdge";
-import { useGameMap } from "@/components/Game/shared/hooks/use-game-map";
 import { MapboxMetroFilledEdge } from "@/lib/mapbox/components/Mapbox/MapboxMetroFilledEdge";
 import { MapboxMetroDiscoveredNode } from "@/lib/mapbox/components/Mapbox/MapboxMetroDiscoveredNode";
 import * as React from "react";
 import { MapboxMetroFromNode } from "@/lib/mapbox/components/Mapbox/MapboxMetroFromNode";
 import { MapboxMetroToNode } from "@/lib/mapbox/components/Mapbox/MapboxMetroToNode";
-import { useGame } from "@/contexts/game/use-game";
+import { usePathGameContext } from "@/contexts/path-game/use-path-game-context";
 import { VictoryConfetti } from "@/components/VictoryConfetti/VictoryConfetti";
-import { MapboxMetroNodeLabel } from "@/lib/mapbox/components/Mapbox/MapboxMetroNodeLabel";
+import { buildMapLayers } from "@/components/PathGame/shared/utils/build-map-layers";
 
 export type GameMapProps = MapboxConfiguration;
 
-export const GameMap = ({ accessToken }: GameMapProps) => {
-    const { hasWon } = useGame();
-    const { initialized, endpointsGeoJson, metroStationsGeoJson, rightPathsGeoJson, wrongPathsGeoJson } = useGameMap();
-
-    if (!initialized) {
-        return null;
-    }
+export const PathGameMap = ({ accessToken }: GameMapProps) => {
+    const { gameState } = usePathGameContext();
+    const { endpointsGeoJson, metroStationsGeoJson, rightPathsGeoJson, wrongPathsGeoJson } = buildMapLayers(
+        gameState.current,
+    );
 
     return (
         <div className="w-full max-w-screen-md grow md:grow-0 md:h-128 [&_.mapboxgl-ctrl-bottom-right]:max-md:!bottom-2 [&_.mapboxgl-ctrl-bottom]:max-md:!bottom-2 [&_.mapboxgl-ctrl-bottom-left]:max-md:!bottom-2">
@@ -52,29 +49,14 @@ export const GameMap = ({ accessToken }: GameMapProps) => {
                 <Source type="geojson" data={metroStationsGeoJson}>
                     <MapboxMetroDiscoveredNode />
                 </Source>
-                <Source type="geojson" data={endpointsGeoJson[0]}>
+                <Source type="geojson" data={endpointsGeoJson.from}>
                     <MapboxMetroFromNode />
                 </Source>
-                <Source type="geojson" data={endpointsGeoJson[1]}>
+                <Source type="geojson" data={endpointsGeoJson.to}>
                     <MapboxMetroToNode />
                 </Source>
-                {metroStationsGeoJson.features.map((feature) => (
-                    <Source
-                        type="geojson"
-                        data={{
-                            ...feature,
-                            geometry: {
-                                ...feature.geometry,
-                                coordinates: [feature.geometry.coordinates[0], feature.geometry.coordinates[1]],
-                            },
-                        }}
-                        key={feature.properties.label}
-                    >
-                        <MapboxMetroNodeLabel>{feature.properties.label}</MapboxMetroNodeLabel>
-                    </Source>
-                ))}
             </Map>
-            {hasWon && <VictoryConfetti />}
+            {gameState.current.hasWon && <VictoryConfetti />}
         </div>
     );
 };

@@ -1,11 +1,15 @@
 "use client";
 
-import { GameProblemStation } from "@/components/Game/shared/components/GameProblemStation";
-import { useGeoGame } from "@/contexts/geo-game/use-geo-game";
+import { PathGameProblemStation } from "@/components/PathGame/shared/components/PathGameProblemStation";
+import { useGeoGameContext } from "@/contexts/geo-game/use-geo-game-context";
 import React from "react";
 
 export const GeoGameDashboard = () => {
-    const { currentStation, score } = useGeoGame();
+    const {
+        gameState: {
+            current: { currentStation, currentScore },
+        },
+    } = useGeoGameContext();
 
     return (
         <div className="w-full p-4 max-w-xs md:px-0 grid grid-cols-[3fr_1fr] gap-3">
@@ -16,11 +20,11 @@ export const GeoGameDashboard = () => {
                     </p>
                 </div>
             ) : (
-                <GameProblemStation>{currentStation.name}</GameProblemStation>
+                <PathGameProblemStation>{currentStation.name}</PathGameProblemStation>
             )}
             <div className="text-center">
                 <p className="text-sm text-neutral-600">Score</p>
-                <p className="font-bold text-xl">{score}</p>
+                <p className="font-bold text-xl">{currentScore}</p>
             </div>
         </div>
     );

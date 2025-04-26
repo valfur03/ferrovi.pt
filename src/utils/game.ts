@@ -1,7 +1,6 @@
 import { GAME_STARTING_DATE } from "@/constants/game";
 import { getFeistelRandomNumber } from "@/lib/feistel-rng";
-import { allDailyMetroProblems, metroGraph, metroStations } from "@/data/metro-stations";
-import { getShortestPathFromAToB } from "@/lib/metro-graph";
+import { allDailyMetroProblems, metroStations } from "@/data/metro-stations";
 
 export const getPathChallengeOfTheDay = (date: Date = new Date()) => {
     const nthDay = Math.floor((date.getTime() - GAME_STARTING_DATE.getTime()) / (1000 * 60 * 60 * 24));
@@ -21,11 +20,5 @@ export const getPathChallengeOfTheDay = (date: Date = new Date()) => {
     const from = metroStations[reversePath ? toStr : fromStr];
     const to = metroStations[reversePath ? fromStr : toStr];
 
-    const shortestPath = getShortestPathFromAToB(metroGraph, from.id, to.id);
-    if (shortestPath === null) {
-        return null;
-    }
-    return shortestPath.map(([, metroStation]) => {
-        return metroStations[metroStation as keyof typeof metroStations];
-    });
+    return { from, to };
 };

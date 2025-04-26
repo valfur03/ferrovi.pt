@@ -1,13 +1,13 @@
 import { GAME_STARTING_DATE } from "@/constants/game";
 import { TweetButton } from "@/components/TweetButton/TweetButton";
-import { useGame } from "@/contexts/game/use-game";
+import { usePathGameContext } from "@/contexts/path-game/use-path-game-context";
 
-export const GameTweetButton = () => {
-    const { stats } = useGame();
-
-    if (stats === null) {
-        return null;
-    }
+export const PathGameTweetButton = () => {
+    const {
+        gameState: {
+            current: { stats },
+        },
+    } = usePathGameContext();
 
     return (
         <TweetButton

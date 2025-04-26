@@ -1,20 +1,24 @@
 "use client";
 
 import * as Dialog from "@radix-ui/react-dialog";
-import { useGame } from "@/contexts/game/use-game";
+import { usePathGameContext } from "@/contexts/path-game/use-path-game-context";
 import { Button } from "@/components/Button/Button";
 import React, { useEffect, useState } from "react";
-import { GameTweetButton } from "@/components/Game/shared/components/GameTweetButton";
+import { PathGameTweetButton } from "@/components/PathGame/shared/components/PathGameTweetButton";
 
-export const GameVictoryDialog = () => {
-    const { hasWon, hasPlayed, stats } = useGame();
+export const PathGameVictoryDialog = () => {
+    const {
+        gameState: {
+            current: { hasWon, stats },
+        },
+    } = usePathGameContext();
     const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
         setTimeout(() => {
-            setIsOpen(hasWon && hasPlayed);
+            setIsOpen(hasWon);
         }, 1000);
-    }, [hasWon, hasPlayed]);
+    }, [hasWon]);
 
     return (
         <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
@@ -41,7 +45,7 @@ export const GameVictoryDialog = () => {
                         </>
                     )}
                     <div className="flex flex-col gap-3 w-full">
-                        <GameTweetButton />
+                        <PathGameTweetButton />
                         <Dialog.Close asChild>
                             <Button className="w-full" aria-label="Close">
                                 Fermer

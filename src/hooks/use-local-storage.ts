@@ -2,22 +2,25 @@
 
 import { useCallback, useMemo } from "react";
 
-export const useLocalStorage = () => {
-    const getItem = useCallback((key: string) => {
+export const useLocalStorage = (key: string) => {
+    const getItem = useCallback(() => {
         if (typeof window === "undefined") {
             return null;
         }
 
         return localStorage.getItem(key);
-    }, []);
+    }, [key]);
 
-    const setItem = useCallback((key: string, value: string) => {
-        if (typeof window === "undefined") {
-            return;
-        }
+    const setItem = useCallback(
+        (value: string) => {
+            if (typeof window === "undefined") {
+                return;
+            }
 
-        return localStorage.setItem(key, value);
-    }, []);
+            return localStorage.setItem(key, value);
+        },
+        [key],
+    );
 
     return useMemo(() => ({ getItem, setItem }), [getItem, setItem]);
 };

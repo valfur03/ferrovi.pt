@@ -1,5 +1,5 @@
 import { Button } from "@/components/Button/Button";
-import { useGeoGame } from "@/contexts/geo-game/use-geo-game";
+import { useGeoGameContext } from "@/contexts/geo-game/use-geo-game-context";
 import { useCallback } from "react";
 import * as React from "react";
 
@@ -9,7 +9,12 @@ export type GeoGameValidationProps = {
 };
 
 export const GeoGameValidation = ({ mapPointSelection, resetMapPointSelection }: GeoGameValidationProps) => {
-    const { makeGuess, hasWon } = useGeoGame();
+    const {
+        makeGuess,
+        gameState: {
+            current: { hasWon },
+        },
+    } = useGeoGameContext();
 
     const handleClick = useCallback(() => {
         if (mapPointSelection !== null) {

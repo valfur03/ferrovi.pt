@@ -1,19 +1,23 @@
 "use client";
 
 import * as Dialog from "@radix-ui/react-dialog";
-import { useGeoGame } from "@/contexts/geo-game/use-geo-game";
+import { useGeoGameContext } from "@/contexts/geo-game/use-geo-game-context";
 import { Button } from "@/components/Button/Button";
 import React, { useEffect, useState } from "react";
 
 export const GeoGameVictoryDialog = () => {
-    const { hasWon, hasPlayed } = useGeoGame();
+    const {
+        gameState: {
+            current: { hasWon },
+        },
+    } = useGeoGameContext();
     const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
         setTimeout(() => {
-            setIsOpen(hasWon && hasPlayed);
+            setIsOpen(hasWon);
         }, 1000);
-    }, [hasWon, hasPlayed]);
+    }, [hasWon]);
 
     return (
         <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>

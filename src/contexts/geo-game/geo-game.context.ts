@@ -1,18 +1,10 @@
-"use client";
-
-import { createContext } from "react";
-import { MetroStation } from "@/types/metro-station";
+import React from "react";
+import { GeoGameType } from "@/contexts/geo-game/geo-game.type";
 
 export type GeoGameContextType = {
-    init: (options: { solutions: Array<MetroStation> }) => void;
-    initialized: boolean;
+    isReady: boolean;
+    gameState: GeoGameType;
     makeGuess: (coordinates: [number, number]) => void;
-    currentStation: Omit<MetroStation, "coordinates"> | null;
-    guesses: Array<[number, number]>;
-    score: number;
-    solutions: Array<MetroStation>;
-    hasWon: boolean;
-    hasPlayed: boolean;
 };
 
-export const GeoGameContext = createContext<GeoGameContextType | null>(null);
+export const GeoGameContext = React.createContext<GeoGameContextType | null>(null);

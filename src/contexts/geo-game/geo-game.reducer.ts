@@ -1,27 +1,34 @@
-import { GeoGame } from "@/contexts/geo-game/geo-game.type";
-import { MetroStation } from "@/types/metro-station";
+import { StaticGeoGameType } from "@/contexts/geo-game/use-geo-game";
+import { areDatesOnSameDay } from "@/utils/date";
+import { calculateGeoGameScore } from "@/utils/geo-game";
 
 export type GeoGameAction =
-    | { type: "INIT"; payload: { solutions: Array<MetroStation>; guesses?: Array<[number, number]> } }
-    | { type: "MAKE_GUESS"; payload: [number, number] };
+    | { type: "ADD_GUESS"; payload: [number, number] }
+    | { type: "SAVE_VICTORY"; payload: { date: Date } };
 
-export const geoGameReducer = (state: GeoGame | null, action: GeoGameAction): GeoGame | null => {
+export const geoGameReducer = (state: StaticGeoGameType, action: GeoGameAction): StaticGeoGameType => {
     switch (action.type) {
-        case "INIT": {
+        case "ADD_GUESS": {
             return {
-                solutions: action.payload.solutions,
-                guesses: action.payload.guesses ?? [],
-                hasPlayed: false,
+                ...state,
+                current: {
+                    ...state.current,
+                    guesses: [...state.current.guesses, action.payload],
+                },
             };
         }
-        case "MAKE_GUESS": {
-            if (state === null) {
+        case "SAVE_VICTORY": {
+            if (state.history.find(({ date }) => areDatesOnSameDay(date, action.payload.date)) !== undefined) {
                 return state;
             }
 
-            return { ...state, guesses: [...state.guesses, action.payload] };
+            return {
+                ...state,
+                history: [...state.history, { date: action.payload.date, score: calculateGeoGameScore(state.current) }],
+            };
         }
-        default:
+        default: {
             return state;
+        }
     }
 };
