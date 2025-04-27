@@ -1,10 +1,11 @@
 import { SearchBar } from "@/components/SearchBar/SearchBar";
 import { usePathGameContext } from "@/contexts/path-game/use-path-game-context";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { metroStationsList } from "@/data/metro-stations";
 import { MetroStation } from "@/types/metro-station";
 import { searchScore } from "@/utils/search";
 import { PathGameTweetButton } from "@/components/PathGame/shared/components/PathGameTweetButton";
+import { isCharacterKeyPress } from "@/utils/events/keyboard";
 
 export const PathGameInput = () => {
     const inputBaseValue = "";
@@ -15,6 +16,7 @@ export const PathGameInput = () => {
             current: { hasWon },
         },
     } = usePathGameContext();
+    const searchBarRef = useRef<HTMLInputElement | null>(null);
 
     const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
         setInputValue(e.target.value);
@@ -51,9 +53,23 @@ export const PathGameInput = () => {
         [makeGuess, resetInput],
     );
 
+    useEffect(() => {
+        function handleKeyDown(e: KeyboardEvent) {
+            if (searchBarRef.current !== null) {
+                if (isCharacterKeyPress(e)) {
+                    searchBarRef.current.focus();
+                }
+            }
+        }
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    });
+
     return (
         <div className="w-full max-w-screen-sm">
             <SearchBar
+                ref={searchBarRef}
                 name="metro-station"
                 placeholder="Entrez le nom d'une station"
                 disabled={hasWon}

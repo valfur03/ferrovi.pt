@@ -1,9 +1,9 @@
 "use client";
 
-import React, { ChangeEventHandler, RefObject, useCallback, useEffect, useRef, useState } from "react";
+import React, { ChangeEventHandler, Ref, useCallback, useEffect, useRef, useState } from "react";
 
 export type SearchBarProps = React.InputHTMLAttributes<HTMLInputElement> & {
-    ref?: RefObject<HTMLInputElement>;
+    ref?: Ref<HTMLInputElement>;
     onSearch?: (value: string) => Array<string>;
     onValueChange?: (value: string) => void;
 };
