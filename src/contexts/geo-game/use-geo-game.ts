@@ -23,7 +23,7 @@ export const initGameState =
 
         return {
             current: {
-                date: save?.current.date ?? new Date(),
+                date: new Date(),
                 solutions,
                 guesses:
                     save !== null && encodeDateForZod(save.current.date) === encodeDateForZod()

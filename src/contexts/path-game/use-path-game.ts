@@ -33,7 +33,7 @@ export const initGameState =
 
         return {
             current: {
-                date: save?.current.date ?? new Date(),
+                date: new Date(),
                 endpoints: {
                     from,
                     to,
