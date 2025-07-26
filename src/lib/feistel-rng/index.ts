@@ -17,7 +17,7 @@ function feistelPermute(input: number, seed: number, range: number, rounds: numb
 }
 
 export function getFeistelRandomNumber(yyyymmdd: number, n: number, m: number): number {
-    const range = m - n + 1;
+    const range = m - n;
 
     const seed = ((yyyymmdd ^ 0x5deece66d) >>> 0) & 0xffffffff;
 
