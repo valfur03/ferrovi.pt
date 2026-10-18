@@ -1,6 +1,6 @@
 import { PathGameContextType } from "@/contexts/path-game/path-game.context";
 import { MetroStation } from "@/types/metro-station";
-import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
+import { useCallback, useMemo, useReducer } from "react";
 import { PathGameAction, pathGameReducer } from "@/contexts/path-game/path-game.reducer";
 import { PathGameType } from "@/contexts/path-game/path-game.type";
 import { findMetroStationByName } from "@/utils/metro";
@@ -9,6 +9,7 @@ import { PathGameSaveSchemaType } from "@/schemas/path-game-save";
 import { areNodesConnected, createSubgraph, getShortestPathFromAToB } from "@/lib/metro-graph";
 import { metroGraph, metroStations } from "@/data/metro-stations";
 import { encodeDateForZod } from "@/utils/date";
+import { useIsClient } from "@/hooks/use-is-client";
 
 export type StaticPathGameType = Omit<PathGameType, "current"> & {
     current: Omit<PathGameType["current"], "stats" | "hasWon">;
@@ -59,16 +60,13 @@ export const usePathGame = (options: UsePathGameOptions): PathGameContextType =>
         initGameState(getFromLocalStorage),
     );
     usePathGameStorageSynchronization(state);
-    const [isReady, setIsReady] = useState(false);
-
-    useEffect(() => {
-        setIsReady(true);
-    }, []);
+    const isReady = useIsClient();
+    const { current, history } = state;
 
     const makeGuess = useCallback(
         (guess: string) => {
             const stationAlreadyDiscovered = (station: MetroStation) =>
-                state.current.discoveredStations.find(({ id }) => id === station.id) !== undefined;
+                current.discoveredStations.find(({ id }) => id === station.id) !== undefined;
 
             const station = findMetroStationByName(guess);
             if (station === undefined) {
@@ -81,24 +79,19 @@ export const usePathGame = (options: UsePathGameOptions): PathGameContextType =>
 
             return true;
         },
-        [state],
+        [current],
     );
 
     const discoveredStationsSubgraph = useMemo(
-        () =>
-            createSubgraph(metroGraph, [
-                state.current.endpoints.from,
-                ...state.current.discoveredStations,
-                state.current.endpoints.to,
-            ]),
-        [state],
+        () => createSubgraph(metroGraph, [current.endpoints.from, ...current.discoveredStations, current.endpoints.to]),
+        [current],
     );
 
     const hasWon = useMemo(() => {
         const hasWon = areNodesConnected(
             discoveredStationsSubgraph,
-            state.current.endpoints.from.id,
-            state.current.endpoints.to.id,
+            current.endpoints.from.id,
+            current.endpoints.to.id,
         );
 
         if (hasWon) {
@@ -106,20 +99,20 @@ export const usePathGame = (options: UsePathGameOptions): PathGameContextType =>
         }
 
         return hasWon;
-    }, [state, discoveredStationsSubgraph]);
+    }, [current, discoveredStationsSubgraph]);
 
     const stats = useMemo(() => {
         const shortestPath = getShortestPathFromAToB(
             discoveredStationsSubgraph,
-            state.current.endpoints.from.id,
-            state.current.endpoints.to.id,
+            current.endpoints.from.id,
+            current.endpoints.to.id,
         );
         const stopsValue = shortestPath !== null ? shortestPath.length - 2 : Infinity;
-        const guessesValue = state.current.discoveredStations.length;
+        const guessesValue = current.discoveredStations.length;
         const daysValue =
-            state.history.length === 0
+            history.length === 0
                 ? 0
-                : state.history.slice(1).reduce<[number, string]>(
+                : history.slice(1).reduce<[number, string]>(
                       ([streak, prevDateStr], { date: dateStr, hasWon }) => {
                           const date = new Date(dateStr);
                           date.setDate(date.getDate() - 1);
@@ -135,14 +128,14 @@ export const usePathGame = (options: UsePathGameOptions): PathGameContextType =>
 
                           return [streak + 1, encodeDateForZod(dateStr)];
                       },
-                      [1, encodeDateForZod(state.history[0].date)],
+                      [1, encodeDateForZod(history[0].date)],
                   )[0];
 
         return {
             stops: {
                 value: stopsValue,
                 label: "arrêts",
-                isBest: stopsValue <= state.current.solution.length,
+                isBest: stopsValue <= current.solution.length,
             },
             guesses: {
                 value: guessesValue,
@@ -155,20 +148,20 @@ export const usePathGame = (options: UsePathGameOptions): PathGameContextType =>
                 isBest: true,
             },
         };
-    }, [state, discoveredStationsSubgraph]);
+    }, [current, history, discoveredStationsSubgraph]);
 
     return useMemo(() => {
         return {
             isReady,
             gameState: {
-                ...state,
+                history,
                 current: {
-                    ...state.current,
+                    ...current,
                     stats,
                     hasWon,
                 },
             },
             makeGuess,
         };
-    }, [isReady, state, stats, hasWon, makeGuess]);
+    }, [isReady, current, history, stats, hasWon, makeGuess]);
 };
