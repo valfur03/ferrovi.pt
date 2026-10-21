@@ -5,7 +5,7 @@ import { usePathGameContext } from "@/contexts/path-game/use-path-game-context";
 export const PathGameTweetButton = () => {
     const {
         gameState: {
-            current: { stats },
+            current: { date, stats },
         },
     } = usePathGameContext();
 
@@ -13,7 +13,7 @@ export const PathGameTweetButton = () => {
         <TweetButton
             text={
                 `#ferrovipathe jour ${
-                    Math.floor((Date.now() - GAME_STARTING_DATE.getTime()) / (1000 * 60 * 60 * 24)) + 1
+                    Math.floor((date.getTime() - GAME_STARTING_DATE.getTime()) / (1000 * 60 * 60 * 24)) + 1
                 }` +
                 "\n" +
                 Object.values(stats)

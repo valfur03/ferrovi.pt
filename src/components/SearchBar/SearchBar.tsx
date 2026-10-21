@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ChangeEventHandler, Ref, useCallback, useEffect, useRef, useState } from "react";
+import React, { ChangeEventHandler, Ref, useCallback, useRef, useState } from "react";
 
 export type SearchBarProps = React.InputHTMLAttributes<HTMLInputElement> & {
     ref?: Ref<HTMLInputElement>;
@@ -10,6 +10,7 @@ export type SearchBarProps = React.InputHTMLAttributes<HTMLInputElement> & {
 
 export const SearchBar = ({ onChange, onSearch, onValueChange, ref, value: propValue, ...props }: SearchBarProps) => {
     const [value, setValue] = useState(propValue ?? "");
+    const [prevPropValue, setPrevPropValue] = useState(propValue);
     const [searchResults, setSearchResults] = useState<{ selectedIndex: number; t: Array<string> }>({
         selectedIndex: 0,
         t: [],
@@ -17,9 +18,10 @@ export const SearchBar = ({ onChange, onSearch, onValueChange, ref, value: propV
     const localRef = useRef<HTMLInputElement>(null);
     const inputRef = ref ?? localRef;
 
-    useEffect(() => {
+    if (propValue !== prevPropValue) {
+        setPrevPropValue(propValue);
         setValue(propValue ?? "");
-    }, [propValue]);
+    }
 
     const handleChange: ChangeEventHandler<HTMLInputElement> = useCallback(
         (e) => {
